@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1466df">
+<title>TV TƯỢNG – Quản lý Xưởng & Điểm bán</title>
+<style>
+:root{--b:#1670e8;--b2:#20a1ed;--g:#12a05c;--r:#d92d20;--y:#f79009;--bg:#f3f6fb;--card:#fff;--tx:#172033;--mut:#667085;--line:#e4e7ec;--soft:#edf3ff}
+*{box-sizing:border-box}html,body{margin:0}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:15px;-webkit-text-size-adjust:100%}
+header{background:linear-gradient(135deg,#1466df,#20a1ed);color:#fff;padding:12px 0}
+.wrap{max-width:1180px;margin:auto;padding:0 12px}
+.top{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.brand{font-size:22px;font-weight:800}.sub{font-size:12px;opacity:.9}
+.who{font-size:12px;text-align:right;opacity:.95}.who button{margin-top:4px;padding:5px 9px;font-size:12px;background:#ffffff26;color:#fff}
+nav{background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+button{border:0;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer;font-size:14px;font-family:inherit}
+button:disabled{opacity:.5;cursor:not-allowed}
+.tab{background:var(--soft);color:#2456a6;white-space:nowrap}.tab.on,.primary{background:var(--b);color:#fff}
+.secondary{background:#eef2f6;color:#344054}.danger{background:#fee4e2;color:#b42318}.ok{background:var(--g);color:#fff}
+.page{padding:14px 12px 30px}
+h2{margin:4px 0 12px;font-size:20px}h3{margin:0 0 10px;font-size:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:9px;align-items:end}
+.card,.panel{background:var(--card);border-radius:14px;padding:14px;box-shadow:0 1px 8px #0000000d}
+.panel+.panel,.panel+.table,.cards+.panel,.panel+.cards{margin-top:12px}
+.num{font-size:22px;font-weight:800;margin-top:4px}.mut{font-size:13px;color:var(--mut)}
+label{font-size:12px;color:var(--mut);display:block;margin-bottom:3px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;font-size:15px;font-family:inherit;color:var(--tx)}
+.table{overflow:auto;margin-top:12px;border-radius:14px;background:#fff;box-shadow:0 1px 8px #0000000d}
+table{width:100%;border-collapse:collapse;min-width:560px}th,td{padding:9px;border-bottom:1px solid #eee;text-align:left;font-size:13px;vertical-align:top}th{background:#f8fafc;white-space:nowrap}
+.red{color:var(--r)}.green{color:var(--g)}.yellow{color:#b54708}
+.badge{display:inline-block;padding:2px 8px;border-radius:99px;background:#e9f8ef;color:#08783f;font-weight:700;font-size:11px}
+.badge.w{background:#fff4d5;color:#b54708}.badge.e{background:#fee4e2;color:#b42318}.badge.i{background:var(--soft);color:#2456a6}
+.note{margin-top:12px;padding:11px 12px;border-radius:10px;background:#fff8e6;border-left:4px solid var(--y);font-size:14px}
+.note.info{background:#eef4ff;border-color:var(--b)}.note.err{background:#fef3f2;border-color:var(--r)}.note.good{background:#ecfdf3;border-color:var(--g)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.alerts li{margin:5px 0}
+.empty{padding:18px;text-align:center;color:var(--mut)}
+
+.chat{display:flex;flex-direction:column;height:calc(100vh - 150px);height:calc(100dvh - 150px);min-height:420px;background:#fff;border-radius:16px;box-shadow:0 1px 8px #0000000d;overflow:hidden}
+.chat-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);gap:8px}
+.chat-head b{font-size:15px}.chat-head .mut{font-size:12px}
+.msgs{flex:1;overflow-y:auto;padding:12px;background:#f8fafc;scroll-behavior:smooth}
+.m{display:flex;margin:8px 0}.m.me{justify-content:flex-end}
+.bub{max-width:88%;padding:10px 12px;border-radius:14px;line-height:1.45;font-size:15px;white-space:normal;word-wrap:break-word;overflow-wrap:anywhere}
+.m.ai .bub{background:#fff;border:1px solid var(--line);border-top-left-radius:4px}
+.m.me .bub{background:var(--b);color:#fff;border-top-right-radius:4px}
+.m.sys .bub{background:#fef3f2;border:1px solid #fecdca;color:#b42318;max-width:100%}
+.bub .meta{font-size:11px;opacity:.65;margin-top:5px}
+.bub img.thumb{max-width:160px;max-height:160px;border-radius:8px;display:block;margin:4px 0}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:8px 10px 0;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{background:var(--soft);color:#2456a6;border-radius:99px;padding:7px 11px;font-size:13px;white-space:nowrap;font-weight:600}
+.att{display:flex;gap:6px;flex-wrap:wrap;padding:6px 10px 0}.att span{background:#eef2f6;border-radius:8px;padding:5px 8px;font-size:12px}.att span b{cursor:pointer;color:var(--r);margin-left:6px}
+.composer{display:flex;gap:6px;align-items:flex-end;padding:8px 10px 10px;border-top:1px solid var(--line);background:#fff}
+.composer textarea{resize:none;min-height:44px;max-height:140px;border-radius:12px;padding:11px}
+.icon{width:44px;height:44px;padding:0;font-size:20px;flex:0 0 44px;background:#eef2f6;border-radius:12px}
+.send{height:44px;flex:0 0 auto;border-radius:12px}
+.typing{display:inline-block;animation:blink 1.2s infinite}@keyframes blink{50%{opacity:.3}}
+
+.act{border:2px solid var(--b);border-radius:14px;background:#fff;padding:12px;margin:8px 0;max-width:100%}
+.act.done{border-color:var(--g);opacity:.92}.act.cancel{border-color:#d0d5dd;opacity:.7}.act.fail{border-color:var(--r)}
+.act h4{margin:0 0 8px;font-size:15px}
+.act table{min-width:0}.act td,.act th{padding:6px 4px;font-size:13px}.act input,.act select{padding:7px;font-size:14px}
+.act .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:7px;margin-bottom:8px}
+.act .btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.act .btns button{flex:1;min-width:120px}
+.bad{border-color:var(--r)!important;background:#fef3f2!important}
+.warn{background:#fff8e6;border-radius:8px;padding:7px 9px;font-size:13px;margin:6px 0;color:#93370d}
+.scroll-x{overflow-x:auto}
+.login{max-width:420px;margin:30px auto}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{display:inline-block;background:#eef2f6;border-radius:6px;padding:1px 6px;font-size:12px;margin:1px}
+@media(max-width:600px){.brand{font-size:19px}.num{font-size:19px}.page{padding:10px 8px 24px}.chat{height:calc(100dvh - 128px);border-radius:12px}.bub{max-width:94%}.sub{display:none}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header><div class="wrap top"><div><div class="brand">🎨 TV TƯỢNG</div><div class="sub">Quản lý Xưởng & Điểm bán • AI hỗ trợ vận hành</div></div><div class="who" id="who"></div></div></header>
+<nav><div class="wrap tabs" id="tabs"></div></nav>
+<main class="wrap page" id="main"></main>
+<input type="file" id="fpick" multiple accept="image/*,.pdf,.csv,.txt,.json,.xlsx,.xls,.docx" hidden>
+<input type="file" id="fcam" accept="image/*" capture="environment" hidden>
+<script>
+"use strict";
+
+const SB_URL = "https://upropxmltqqexvtnuerg.supabase.co";
+// Publishable key: loại khóa CÔNG KHAI dành cho frontend (được bảo vệ bởi đăng nhập + RLS). Không phải secret.
+const SB_PUBLISHABLE = "sb_publishable_1r1pPXDHh8Vr3r5LDy6AEw_V03DUmkG";
+const AI_DEFAULT = "https://tv-tuong-ai.vohongthang476.workers.dev";
+const MENUS = ["🤖 Trợ lý AI","Tổng quan","Sản phẩm","Nhập kho","Kho","Combo","Điểm bán","Kệ","Ký gửi","Đối soát","Thu tiền","Báo cáo","Dữ liệu","Kết nối","⚙️ AI"];
+const LS = {get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => Math.round(+n || 0).toLocaleString("vi-VN") + "đ";
+const fnum = n => (+n || 0).toLocaleString("vi-VN");
+const dt = s => s ? new Date(s).toLocaleString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}) : "";
+const dOnly = s => s ? new Date(s).toLocaleDateString("vi-VN") : "";
+const norm = s => String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/[^a-z0-9]+/g," ").trim();
+const daysAgo = s => s ? Math.floor((Date.now() - new Date(s).getTime()) / 864e5) : null;
+function md(t){ // markdown tối giản an toàn
+  let h = esc(t);
+  h = h.replace(/[*]{2}(.+?)[*]{2}/g,"<b>$1</b>").replace(/(^|\n)#{1,4}\s*(.+)/g,"$1<b>$2</b>").replace(/(^|\n)\s*[-*]\s+/g,"$1• ");
+  return h.replace(/\n/g,"<br>");
+}
+function toast(msg, kind="info"){ const n=document.createElement("div"); n.className="note "+kind; n.style.cssText="position:fixed;left:12px;right:12px;bottom:14px;z-index:99;max-width:560px;margin:auto;box-shadow:0 6px 24px #0003"; n.innerHTML=msg; document.body.appendChild(n); setTimeout(()=>n.remove(), kind==="err"?7000:3500); }
+function friendlyDbError(e){
+  const m = (e && (e.message || e.error_description || e.msg)) || String(e);
+  if (/JWT|expired|not authenticated|401/i.test(m)) return "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại ở tab Kết nối.";
+  if (/permission denied|row-level security|42501/i.test(m)) return "Không có quyền ghi dữ liệu (RLS). Hãy đăng nhập lại.";
+  if (/Failed to fetch|NetworkError|network/i.test(m)) return "Mất kết nối mạng tới Supabase. Kiểm tra Internet rồi thử lại.";
+  if (/function .* does not exist|PGRST202/i.test(m)) return "Chưa có hàm nghiệp vụ trên Supabase (tv_...). Cần cài đặt hàm trước.";
+  return m;
+}
+
+
+let sb = null, user = null, loading = false, lastLoad = 0, loadErr = "";
+const S = { products:[], categories:[], stores:[], racks:[], inv:[], comboItems:[], suppliers:[], receipts:[], consigns:[], recs:[], pays:[], moves:[], aiLog:[] };
+function initSB(){
+  if (sb) return true;
+  try {
+    if (!window.supabase) throw new Error("Không tải được thư viện Supabase (kiểm tra mạng).");
+    sb = window.supabase.createClient(SB_URL, SB_PUBLISHABLE, { auth: { persistSession: true, autoRefreshToken: true } });
+    sb.auth.onAuthStateChange((ev, session) => { const u = session?.user || null; const changed = (u?.id||"") !== (user?.id||""); user = u; if (changed) setTimeout(() => { if (user) loadAll(); else render(); }, 0); });
+    return true;
+  } catch (e) { loadErr = e.message; return false; }
+}
+async function q(p){ const { data, error } = await p; if (error) throw error; return data || []; }
+async function loadAll(silent){
+  if (!user || loading) return; loading = true; loadErr = "";
+  if (!silent) render();
+  try {
+    const since = new Date(Date.now() - 120*864e5).toISOString();
+    const [products, categories, stores, racks, inv, comboItems, suppliers, receipts, consigns, recs, pays, moves, aiLog] = await Promise.all([
+      q(sb.from("products").select("*, product_categories(name)").order("sku")),
+      q(sb.from("product_categories").select("*").order("name")),
+      q(sb.from("stores").select("*").order("name")),
+      q(sb.from("racks").select("*").order("code")),
+      q(sb.from("store_inventory").select("*")),
+      q(sb.from("combo_items").select("*")),
+      q(sb.from("suppliers").select("*").order("name")),
+      q(sb.from("stock_receipts").select("*, suppliers(name), stock_receipt_items(*)").order("created_at",{ascending:false}).limit(100)),
+      q(sb.from("consignments").select("*, consignment_items(*)").order("created_at",{ascending:false}).limit(200)),
+      q(sb.from("reconciliations").select("*, reconciliation_items(*)").order("created_at",{ascending:false}).limit(500)),
+      q(sb.from("payments").select("*").order("created_at",{ascending:false}).limit(500)),
+      q(sb.from("stock_movements").select("product_id,movement_type,quantity,location_id,created_at").gte("created_at", since).order("created_at",{ascending:false}).limit(3000)),
+      q(sb.from("ai_commands").select("*").order("created_at",{ascending:false}).limit(60)),
+    ]);
+    Object.assign(S, { products, categories, stores, racks, inv, comboItems, suppliers, receipts, consigns, recs, pays, moves, aiLog });
+    lastLoad = Date.now();
+  } catch (e) { loadErr = friendlyDbError(e); }
+  loading = false; render();
+}
+const P = id => S.products.find(x => x.id === id);
+const ST = id => S.stores.find(x => x.id === id);
+const pName = id => P(id)?.name || "(SP đã xóa)";
+const sName = id => ST(id)?.name || "(CH đã xóa)";
+const isCombo = p => p && p.source_type === "combo";
+const comboParts = id => S.comboItems.filter(c => c.combo_product_id === id);
+const catName = p => p?.product_categories?.name || "";
+const heldAt = sid => S.inv.filter(i => i.store_id === sid && +i.quantity > 0);
+const heldQty = (sid, pid) => +(S.inv.find(i => i.store_id === sid && i.product_id === pid)?.quantity || 0);
+const heldTotalProduct = pid => S.inv.filter(i => i.product_id === pid).reduce((a, i) => a + +i.quantity, 0);
+function canBuild(cid){ const parts = comboParts(cid); if (!parts.length) return 0; return Math.min(...parts.map(c => Math.floor(+(P(c.component_product_id)?.stock||0) / +c.quantity))); }
+
+
+function analytics(){
+  const now = Date.now(), d30 = now - 30*864e5, monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+  const items = S.recs.flatMap(r => (r.reconciliation_items||[]).map(i => ({...i, store_id:r.store_id, created_at:r.created_at})));
+  const sum = (arr, f) => arr.reduce((a, x) => a + f(x), 0);
+  const month = items.filter(i => new Date(i.created_at).getTime() >= monthStart);
+  const k = arr => ({ retail: sum(arr, i => i.sold_qty*i.retail_price), share: sum(arr, i => i.sold_qty*i.store_share), due: sum(arr, i => +i.amount_due), cost: sum(arr, i => i.sold_qty*i.cost), sold: sum(arr, i => +i.sold_qty), broken: sum(arr, i => +i.broken_qty) });
+  const all = k(items), mon = k(month);
+  const sold30 = {}; items.filter(i => new Date(i.created_at).getTime() >= d30).forEach(i => sold30[i.product_id] = (sold30[i.product_id]||0) + +i.sold_qty);
+  const lastOut = {}; S.moves.forEach(m => { if (+m.quantity < 0 && !lastOut[m.product_id]) lastOut[m.product_id] = m.created_at; });
+  const active = S.products.filter(p => p.active !== false);
+  const low = active.filter(p => +p.stock <= +p.min_stock && !(isCombo(p) && +p.min_stock === 0));
+  const idle = active.filter(p => +p.stock > 0 && daysAgo(p.created_at) > 30 && (!lastOut[p.id] || daysAgo(lastOut[p.id]) > 30));
+  const lastRec = {}, lastCons = {};
+  S.recs.forEach(r => { if (!lastRec[r.store_id]) lastRec[r.store_id] = r.created_at; });
+  S.consigns.forEach(c => { if (!lastCons[c.store_id]) lastCons[c.store_id] = c.created_at; });
+  const debtors = S.stores.filter(s => +s.debt > 0).sort((a, b) => b.debt - a.debt);
+  const storeRows = S.stores.filter(s => s.active !== false).map(s => {
+    const held = heldAt(s.id).reduce((a, i) => a + +i.quantity, 0);
+    const sold = sum(items.filter(i => i.store_id === s.id && new Date(i.created_at).getTime() >= d30), i => +i.sold_qty);
+    return { id:s.id, name:s.name, area:s.area, debt:+s.debt, held, sold30:sold, racks:S.racks.filter(r => r.store_id === s.id && r.status === "assigned").length, lastRec:lastRec[s.id], lastCons:lastCons[s.id] };
+  });
+  const restock = storeRows.filter(r => r.lastCons && (r.held <= 5 || (r.sold30 > 0 && r.held < r.sold30 * 0.5)));
+  const overdueRec = storeRows.filter(r => r.held > 0 && (!r.lastRec || daysAgo(r.lastRec) > 14) && r.lastCons && daysAgo(r.lastCons) > 7);
+  const paid = sum(S.pays, p => +p.amount), paidMonth = sum(S.pays.filter(p => new Date(p.created_at).getTime() >= monthStart), p => +p.amount);
+  const brokenRate = all.sold + all.broken > 0 ? all.broken / (all.sold + all.broken) : 0;
+  return { all, mon, sold30, lastOut, low, idle, debtors, storeRows, restock, overdueRec, paid, paidMonth, brokenRate, items };
+}
+function alertsList(a){
+  const out = [];
+  a.low.forEach(p => out.push(["e", `Sắp hết: <b>${esc(p.name)}</b> còn ${fnum(p.stock)} ${esc(p.unit)} (tối thiểu ${fnum(p.min_stock)})`]));
+  a.debtors.slice(0,5).forEach(s => out.push(["w", `Công nợ: <b>${esc(s.name)}</b> ${money(s.debt)}`]));
+  a.restock.forEach(r => out.push(["i", `Nên bổ sung hàng: <b>${esc(r.name)}</b> (đang giữ ${fnum(r.held)}, bán 30 ngày ${fnum(r.sold30)})`]));
+  a.overdueRec.forEach(r => out.push(["w", `Lâu chưa đối soát: <b>${esc(r.name)}</b> (${r.lastRec ? daysAgo(r.lastRec) + " ngày" : "chưa từng"})`]));
+  a.idle.slice(0,5).forEach(p => out.push(["i", `Tồn lâu (>30 ngày không xuất): <b>${esc(p.name)}</b> ${fnum(p.stock)} ${esc(p.unit)}`]));
+  if (a.brokenRate > 0.05) out.push(["w", `Tỷ lệ hỏng/vỡ ${(a.brokenRate*100).toFixed(1)}% — cao hơn mức 5%`]);
+  return out;
+}
+
+
+function aiContext(){
+  const a = analytics();
+  return {
+    ngay: new Date().toLocaleDateString("vi-VN"),
+    san_pham: S.products.filter(p => p.active !== false).map(p => ({ sku:p.sku, ten:p.name, nhom:catName(p), dvt:p.unit, loai:p.source_type, ton_kho:+p.stock, ton_toi_thieu:+p.min_stock, gia_ban:+p.retail_price, diem_ban_huong:+p.store_share, gia_von:+p.cost, dang_o_diem_ban:heldTotalProduct(p.id), ban_30_ngay:a.sold30[p.id]||0, xuat_gan_nhat:a.lastOut[p.id]?dOnly(a.lastOut[p.id]):null,
+      ...(isCombo(p) ? { thanh_phan: comboParts(p.id).map(c => ({ sku:P(c.component_product_id)?.sku, sl:+c.quantity })), co_the_dong_them: canBuild(p.id) } : {}) })),
+    cua_hang: S.stores.filter(s => s.active !== false).map(s => { const r = a.storeRows.find(x => x.id === s.id) || {}; return { ten:s.name, khu_vuc:s.area, dien_thoai:s.phone, cong_no:+s.debt, so_ke:r.racks, hang_dang_giu:heldAt(s.id).map(i => ({ sku:P(i.product_id)?.sku, ten:pName(i.product_id), sl:+i.quantity })), ban_30_ngay:r.sold30, giao_gan_nhat:r.lastCons?dOnly(r.lastCons):null, doi_soat_gan_nhat:r.lastRec?dOnly(r.lastRec):null }; }),
+    ke: S.racks.map(r => ({ ma:r.code, trang_thai:r.status, cua_hang:r.store_id?sName(r.store_id):null, gia_tri:+r.asset_value, coc:+r.deposit })),
+    tong_hop: { tong_cong_no: a.debtors.reduce((x, s) => x + +s.debt, 0), doanh_thu_ban_le_thang: a.mon.retail, phai_thu_thang: a.mon.due, lai_gop_thang: a.mon.due - a.mon.cost, da_thu_thang: a.paidMonth, doanh_thu_ban_le_tat_ca: a.all.retail, ty_le_hong: +(a.brokenRate*100).toFixed(1) },
+    canh_bao: alertsList(a).map(x => x[1].replace(/<[^>]+>/g,"")),
+    nha_cung_cap: S.suppliers.map(s => s.name),
+  };
+}
+
+
+function aiCfg(){
+  let e = LS.get("tvt-ai-endpoint", "") || AI_DEFAULT;
+  if (!/^https:\/\//i.test(e)) e = AI_DEFAULT;
+  return { provider: LS.get("tvt-ai-provider","gemini"), model: LS.get("tvt-ai-model",""), endpoint: e.replace(/\/+$/,"") };
+}
+async function callAI(payload){
+  const cfg = aiCfg(); let r;
+  try { r = await fetch(cfg.endpoint, { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ provider:cfg.provider, model:cfg.model, ...payload }) }); }
+  catch (e) { throw new Error("Không kết nối được máy chủ AI. Kiểm tra mạng Internet (hoặc URL backend ở tab ⚙️ AI)."); }
+  let j = {}; try { j = await r.json(); } catch (e) {}
+  if (!r.ok || j.ok === false) {
+    const hint = { key:"🔑 Lỗi API key", quota:"⏳ Hết hạn mức", model:"🧩 Lỗi model", network:"🌐 Lỗi mạng", timeout:"⏱️ Quá thời gian", server:"🛠️ Máy chủ AI quá tải", config:"⚙️ Thiếu cấu hình", request:"📄 Yêu cầu/tệp không hợp lệ" }[j.kind] || "⚠️ Lỗi AI";
+    throw new Error(hint + ": " + (j.error || ("HTTP " + r.status)));
+  }
+  if ((!j.actions || !j.actions.length) && /^\s*\{/.test(j.reply || "")) { try { const o = JSON.parse(j.reply); j.reply = o.reply || j.reply; j.actions = o.actions || []; } catch (e) {} }
+  return j;
+}
+
+
+let chat = LS.get("tvt-chat", []);   // {role:'user'|'ai'|'sys', text, files?, ts, actions?}
+let pendingFiles = [];               // {name,type,size,data?,text?,thumb?}
+let busy = false;
+const actState = {};                 // key -> {status, logId, result, error}
+function saveChat(){ LS.set("tvt-chat", chat.slice(-60).map(m => ({ ...m, files: (m.files||[]).map(f => ({ name:f.name, type:f.type })) }))); }
+function welcome(){
+  return `Xin chào anh/chị 👋 Em là <b>Trợ lý AI TV TƯỢNG</b>. Anh/chị có thể:<br>• Hỏi: <i>"Hôm nay cửa hàng nào còn nợ tiền?"</i>, <i>"Kiểm tra sản phẩm sắp hết"</i><br>• Ra lệnh: <i>"Nhập thêm 100 tượng Mini"</i>, <i>"Thêm cửa hàng Minh Anh ở Yên Thành"</i>, <i>"Giao cửa hàng Minh Anh 20 Combo Kids"</i><br>• Bấm 📷 chụp hóa đơn / 📎 chọn file (ảnh, PDF, Excel, Word, CSV...) để em đọc và lập phiếu.<br><br>🔒 Mọi thay đổi dữ liệu đều hiện <b>bản xem trước</b>, chỉ ghi khi anh/chị bấm <b>Xác nhận</b>.`;
+}
+const QUICK = ["Tình hình kinh doanh thế nào?","Kiểm tra sản phẩm sắp hết","Hôm nay cửa hàng nào còn nợ tiền?","Tôi nên bổ sung hàng cho cửa hàng nào?","Hàng nào tồn lâu?","Kệ đang đặt ở đâu?","Có gì bất thường không?"];
+
+function chatHTML(){
+  return `<div class="chat">
+    <div class="chat-head"><div><b>🤖 Trợ lý AI TV TƯỢNG</b><div class="mut" id="aistat">${esc(aiCfg().provider)} • ${user ? "dữ liệu Supabase" : "chưa đăng nhập"}</div></div>
+      <button class="secondary" style="padding:7px 10px;font-size:12px" onclick="clearChat()">🗑 Xóa hội thoại</button></div>
+    <div class="msgs" id="msgs"></div>
+    <div class="chips">${QUICK.map(t => `<button class="chip" onclick="sendText(${esc(JSON.stringify(t))})">${esc(t)}</button>`).join("")}</div>
+    <div class="att" id="att"></div>
+    <div class="composer">
+      <button class="icon" title="Chụp hóa đơn" onclick="fcam.click()">📷</button>
+      <button class="icon" title="Chọn file" onclick="fpick.click()">📎</button>
+      <textarea id="cmd" rows="1" placeholder="Nhập yêu cầu... (VD: Nhập thêm 100 tượng Mini)" oninput="autoGrow(this)" onkeydown="if(event.key==='Enter'&&!event.shiftKey&&!('ontouchstart' in window)){event.preventDefault();sendMsg()}"></textarea>
+      <button class="primary send" id="sendbtn" onclick="sendMsg()">Gửi</button>
+    </div></div>`;
+}
+function autoGrow(t){ t.style.height = "auto"; t.style.height = Math.min(140, t.scrollHeight) + "px"; }
+function renderMsgs(){
+  const box = $("msgs"); if (!box) return;
+  let h = `<div class="m ai"><div class="bub">${welcome()}</div></div>`;
+  chat.forEach((m, idx) => {
+    const files = (m.files||[]).map(f => f.thumb ? `<img class="thumb" src="${f.thumb}" alt="">` : `<div class="pill">📄 ${esc(f.name)}</div>`).join("");
+    const meta = m.meta ? `<div class="meta">${esc(m.meta)}</div>` : "";
+    if (m.role === "user") h += `<div class="m me"><div class="bub">${files}${md(m.text)}</div></div>`;
+    else if (m.role === "sys") h += `<div class="m sys"><div class="bub">${md(m.text)}</div></div>`;
+    else {
+      h += `<div class="m ai"><div class="bub">${md(m.text)}${meta}</div></div>`;
+      (m.actions||[]).forEach((a, ai) => { h += `<div class="m ai" style="display:block">${actionCard(a, idx + "-" + ai)}</div>`; });
+    }
+  });
+  if (busy) h += `<div class="m ai"><div class="bub"><span class="typing">Em đang xử lý…</span></div></div>`;
+  box.innerHTML = h; box.scrollTop = box.scrollHeight;
+}
+function renderAtt(){ const a = $("att"); if (!a) return; a.innerHTML = pendingFiles.map((f, i) => `<span>${f.thumb ? "🖼" : "📄"} ${esc(f.name)}${f.note ? " • " + esc(f.note) : ""}<b onclick="pendingFiles.splice(${i},1);renderAtt()">✕</b></span>`).join(""); }
+function clearChat(){ if (!confirm("Xóa lịch sử hội thoại trên máy này?")) return; chat = []; saveChat(); renderMsgs(); }
+function sendText(t){ const c = $("cmd"); if (c) c.value = t; sendMsg(); }
+
+
+function loadScript(src){ return new Promise((res, rej) => { if (document.querySelector(`script[src="${src}"]`)) return res(); const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = () => rej(new Error("Không tải được thư viện đọc file")); document.head.appendChild(s); }); }
+function readAs(file, how){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(new Error("Không đọc được file " + file.name)); r[how](file); }); }
+async function compressImage(file){
+  const url = await readAs(file, "readAsDataURL");
+  const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("Ảnh " + file.name + " không đọc được (định dạng chưa hỗ trợ).")); i.src = url; });
+  const max = 1800, sc = Math.min(1, max / Math.max(img.width, img.height));
+  const c = document.createElement("canvas"); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+  const g = c.getContext("2d"); g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+  const data = c.toDataURL("image/jpeg", 0.85);
+  const t = document.createElement("canvas"); const ts = Math.min(1, 200 / Math.max(img.width, img.height)); t.width = img.width*ts; t.height = img.height*ts; t.getContext("2d").drawImage(img, 0, 0, t.width, t.height);
+  return { name:file.name, type:"image/jpeg", data, thumb:t.toDataURL("image/jpeg", 0.7), note: Math.round(data.length*0.75/1024) + "KB" };
+}
+async function prepFile(file){
+  const n = file.name.toLowerCase();
+  if (file.size > 15*1024*1024) throw new Error(`File ${file.name} quá lớn (>15MB).`);
+  if (file.type.startsWith("image/") || /\.(jpe?g|png|webp|heic|heif|gif|bmp)$/.test(n)) return compressImage(file);
+  if (file.type === "application/pdf" || n.endsWith(".pdf")) { if (file.size > 12*1024*1024) throw new Error("PDF lớn hơn 12MB, hãy tách nhỏ."); return { name:file.name, type:"application/pdf", data: await readAs(file, "readAsDataURL"), note:"PDF" }; }
+  if (/\.(csv|txt|json|tsv|md)$/.test(n) || /^text\//.test(file.type) || file.type === "application/json") { const t = await readAs(file, "readAsText"); return { name:file.name, type:file.type||"text/plain", text: t.slice(0, 60000), note: t.length > 60000 ? "đã cắt bớt" : "văn bản" }; }
+  if (/\.(xlsx|xls)$/.test(n)) {
+    await loadScript("https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js");
+    const wb = XLSX.read(await readAs(file, "readAsArrayBuffer"), { type:"array" });
+    const t = wb.SheetNames.map(s => "### Sheet: " + s + "\n" + XLSX.utils.sheet_to_csv(wb.Sheets[s])).join("\n\n");
+    return { name:file.name, type:"text/csv", text: t.slice(0, 60000), note:"Excel" };
+  }
+  if (n.endsWith(".docx")) {
+    await loadScript("https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js");
+    const r = await mammoth.extractRawText({ arrayBuffer: await readAs(file, "readAsArrayBuffer") });
+    return { name:file.name, type:"text/plain", text: (r.value||"").slice(0, 60000), note:"Word" };
+  }
+  throw new Error(`Chưa hỗ trợ loại file ${file.name}. Dùng ảnh, PDF, Excel, Word, CSV, TXT, JSON.`);
+}
+async function onPick(ev){
+  const fs = [...ev.target.files]; ev.target.value = "";
+  for (const f of fs) { try { pendingFiles.push(await prepFile(f)); } catch (e) { toast("⚠️ " + esc(e.message), "err"); } }
+  if (pendingFiles.length > 6) { pendingFiles = pendingFiles.slice(0, 6); toast("Tối đa 6 file mỗi lần.", "err"); }
+  if (page !== "🤖 Trợ lý AI") go("🤖 Trợ lý AI"); else renderAtt();
+}
+
+
+async function sendMsg(){
+  if (busy) return;
+  const c = $("cmd"); let text = (c?.value || "").trim();
+  if (!text && !pendingFiles.length) return;
+  if (!text) text = "Đọc và phân tích chứng từ này, trích xuất dữ liệu để nhập kho nếu phù hợp.";
+  const files = pendingFiles; pendingFiles = [];
+  if (c) { c.value = ""; autoGrow(c); }
+  if (!user) { chat.push({ role:"user", text, files, ts:Date.now() }); chat.push({ role:"sys", text:"Anh/chị chưa đăng nhập Supabase nên em chưa xem được dữ liệu kho/cửa hàng. Vào tab **Kết nối** để đăng nhập." }); saveChat(); renderMsgs(); renderAtt(); return; }
+  const history = chat.filter(m => m.role !== "sys").slice(-12).map(m => ({ role: m.role === "user" ? "user" : "model", text: m.text }));
+  chat.push({ role:"user", text, files: files.map(f => ({ name:f.name, type:f.type, thumb:f.thumb })), ts:Date.now() });
+  busy = true; renderMsgs(); renderAtt();
+  const textFiles = files.filter(f => f.text), binFiles = files.filter(f => f.data);
+  let message = text;
+  textFiles.forEach(f => message += `\n\n----- Nội dung tệp "${f.name}" -----\n${f.text}`);
+  const t0 = Date.now();
+  try {
+    if (Date.now() - lastLoad > 60000) await loadAll(true);
+    const j = await callAI({ message, history, mode: files.length ? "document" : "chat", files: binFiles.map(f => ({ name:f.name, type:f.type, data:f.data })), context: aiContext() });
+    const acts = (j.actions||[]).map(a => prepareAction(a, text));
+    const notes = (j.notes||[]).join(" ");
+    chat.push({ role:"ai", text: j.reply || "…", actions: acts, meta: `${j.model || ""} • ${((Date.now()-t0)/1000).toFixed(1)}s${notes ? " • " + notes : ""}`, ts:Date.now() });
+    acts.forEach(a => logAction(a));
+  } catch (e) {
+    chat.push({ role:"sys", text: e.message + "\n\nCác chức năng nhập liệu thủ công ở các tab vẫn dùng bình thường." });
+    const fb = localFallback(text); if (fb) chat.push({ role:"ai", text: fb, meta:"trả lời nhanh từ dữ liệu (không dùng AI)" });
+  }
+  busy = false; saveChat(); renderMsgs();
+}
+function localFallback(t){
+  const n = norm(t), a = analytics();
+  if (/sap het|ton kho thap|can nhap/.test(n)) return a.low.length ? "Hàng sắp hết:\n" + a.low.map(p => `• ${p.name}: ${fnum(p.stock)} ${p.unit} (tối thiểu ${fnum(p.min_stock)})`).join("\n") : "Chưa có mặt hàng nào chạm tồn tối thiểu.";
+  if (/cong no|no tien|dang no/.test(n)) return a.debtors.length ? "Công nợ:\n" + a.debtors.map(s => `• ${s.name}: ${money(s.debt)}`).join("\n") : "Hiện không có cửa hàng nào nợ.";
+  return "";
+}
+
+
+const ACT_LABEL = { create_store:"Thêm cửa hàng", create_product:"Thêm sản phẩm", stock_in:"Nhập kho", create_combo:"Tạo combo", build_combo:"Đóng combo", consign:"Giao ký gửi", reconcile:"Đối soát", record_payment:"Thu tiền", assign_rack:"Bàn giao kệ" };
+function findProduct(sku, name){
+  if (sku) { const p = S.products.find(x => x.sku.toUpperCase() === String(sku).toUpperCase()); if (p) return { id:p.id, sure:true }; }
+  const n = norm(name || sku); if (!n) return { id:"", sure:false };
+  let p = S.products.find(x => norm(x.name) === n); if (p) return { id:p.id, sure:true };
+  const cands = S.products.filter(x => n.includes(norm(x.name)) || norm(x.name).includes(n));
+  if (cands.length === 1) return { id:cands[0].id, sure:false };
+  return { id:"", sure:false };
+}
+function findStore(name){
+  const n = norm(name); if (!n) return { id:"", sure:false };
+  let s = S.stores.find(x => norm(x.name) === n); if (s) return { id:s.id, sure:true };
+  const c = S.stores.filter(x => n.includes(norm(x.name)) || norm(x.name).includes(n));
+  return c.length === 1 ? { id:c[0].id, sure:false } : { id:"", sure:false };
+}
+let actSeq = 0;
+function prepareAction(a, cmdText){
+  const p = JSON.parse(JSON.stringify(a.params || {}));
+  const x = { key: "a" + Date.now().toString(36) + (actSeq++), type:a.type, confidence:a.confidence ?? 0.5, warnings:[...(a.warnings||[])], cmd:cmdText, p };
+  if (p.items) p.items = p.items.map(it => { const f = findProduct(it.product_sku, it.name_on_doc || it.product_name); return { ...it, product_id: f.id || (it.product_sku || it.name_on_doc ? "" : ""), sure: f.sure && (it.confidence ?? 1) >= 0.7 }; });
+  if (p.components) p.components = p.components.map(it => { const f = findProduct(it.product_sku, it.name); return { ...it, product_id:f.id, sure:f.sure }; });
+  if ("store_name" in p) { const f = findStore(p.store_name); p.store_id = f.id; p.store_sure = f.sure; if (!f.id && p.store_name) x.warnings.push(`Chưa tìm thấy cửa hàng "${p.store_name}" trong dữ liệu.`); }
+  if (a.type === "build_combo") { const f = findProduct(p.combo_sku, p.combo_name); p.combo_id = f.id; }
+  if (a.type === "stock_in" && p.items) {
+    p.items.forEach(it => { if (!it.product_id) x.warnings.push(`Dòng "${it.name_on_doc || it.product_sku}" chưa khớp sản phẩm nào — chọn sản phẩm, tạo mới hoặc bỏ qua.`); });
+    const calc = p.items.reduce((s, it) => s + (+it.qty||0) * (+it.unit_cost||0), 0);
+    if (p.doc_total && calc && Math.abs(calc - p.doc_total) > 1) x.warnings.push(`Tổng tính lại ${money(calc)} ≠ tổng trên chứng từ ${money(p.doc_total)} (có thể có dòng không thuộc kho, hãy kiểm tra).`);
+    p.items.forEach(it => { if (it.qty && it.unit_cost && it.line_total && Math.abs(it.qty*it.unit_cost - it.line_total) > 1) x.warnings.push(`Dòng "${it.name_on_doc}": ${it.qty} × ${fnum(it.unit_cost)} ≠ ${fnum(it.line_total)}.`); });
+  }
+  return x;
+}
+function st(a){ return actState[a.key] || { status: a.status || "pending" }; }
+function optProducts(sel, filter, allowNew, docName){
+  const list = S.products.filter(p => p.active !== false && (!filter || filter(p)));
+  return `<option value="">— Chọn sản phẩm —</option>` + list.map(p => `<option value="${p.id}" ${p.id === sel ? "selected" : ""}>${esc(p.name)} (${esc(p.sku)}) • tồn ${fnum(p.stock)}</option>`).join("")
+    + (allowNew ? `<option value="__new__" ${sel === "__new__" ? "selected" : ""}>➕ Tạo sản phẩm mới: ${esc(docName || "")}</option><option value="__skip__" ${sel === "__skip__" ? "selected" : ""}>⛔ Bỏ qua dòng này</option>` : "");
+}
+function optStores(sel){ return `<option value="">— Chọn cửa hàng —</option>` + S.stores.filter(s => s.active !== false).map(s => `<option value="${s.id}" ${s.id === sel ? "selected" : ""}>${esc(s.name)}${s.area ? " – " + esc(s.area) : ""}${+s.debt ? " • nợ " + money(s.debt) : ""}</option>`).join(""); }
+const fld = (a, path, val, type="text", label="", extra="") => `<div><label>${label}</label><input type="${type}" value="${esc(val ?? "")}" ${extra} onchange="setP('${a.key}','${path}',this.value,'${type}')"></div>`;
+function actionCard(a, idxKey){
+  if (!a || !a.p) return "";
+  const s = st(a), p = a.p, dis = s.status !== "pending" ? "disabled" : "";
+  const cls = { done:"done", cancelled:"cancel", failed:"fail" }[s.status] || "";
+  let body = "";
+  const low = a.confidence < 0.7 || a.warnings.length;
+  if (a.type === "stock_in") {
+    body = `<div class="grid"><div><label>Loại phiếu</label><select ${dis} onchange="setP('${a.key}','receipt_type',this.value)">${[["production","Sản xuất"],["purchase","Mua nhà cung cấp"],["return","Hàng trả về"],["adjustment","Điều chỉnh tăng"]].map(([v,l]) => `<option value="${v}" ${p.receipt_type === v ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+      ${fld(a,"supplier",p.supplier,"text","Nhà cung cấp",dis)}${fld(a,"doc_date",p.doc_date,"text","Ngày chứng từ",dis)}${fld(a,"doc_no",p.doc_no,"text","Số chứng từ",dis)}</div>
+      <div class="scroll-x"><table><tr><th>Trên chứng từ / yêu cầu</th><th>Sản phẩm trong kho</th><th>SL</th><th>Đơn giá</th><th>Thành tiền</th></tr>
+      ${(p.items||[]).map((it, i) => `<tr><td>${esc(it.name_on_doc || it.product_sku || "")}${it.confidence != null && it.confidence < 0.7 ? ` <span class="badge w">chưa chắc</span>` : ""}</td>
+        <td><select class="${!it.product_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','items.${i}.product_id',this.value)">${optProducts(it.product_id, p => !isCombo(p), true, it.name_on_doc)}</select></td>
+        <td style="width:80px"><input type="number" class="${!(+it.qty > 0) ? "bad" : ""}" value="${esc(it.qty ?? "")}" ${dis} onchange="setP('${a.key}','items.${i}.qty',this.value,'number')"></td>
+        <td style="width:100px"><input type="number" value="${esc(it.unit_cost ?? "")}" ${dis} onchange="setP('${a.key}','items.${i}.unit_cost',this.value,'number')"></td>
+        <td>${money((+it.qty||0) * (+it.unit_cost||0))}</td></tr>`).join("")}
+      <tr><td colspan="4" style="text-align:right"><b>Tổng</b>${p.doc_total ? ` <span class="mut">(chứng từ: ${money(p.doc_total)})</span>` : ""}</td><td><b>${money((p.items||[]).filter(it => it.product_id !== "__skip__").reduce((s, it) => s + (+it.qty||0) * (+it.unit_cost||0), 0))}</b></td></tr></table></div>`;
+  } else if (a.type === "consign") {
+    body = `<div class="grid"><div><label>Cửa hàng nhận</label><select class="${!p.store_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','store_id',this.value)">${optStores(p.store_id)}</select></div>${fld(a,"note",p.note,"text","Ghi chú",dis)}</div>
+      <table><tr><th>Sản phẩm / Combo</th><th>SL giao</th><th>Kho còn</th></tr>${(p.items||[]).map((it, i) => { const pr = P(it.product_id); const need = +it.qty || 0; let info = pr ? fnum(pr.stock) : "";
+        if (pr && isCombo(pr) && pr.stock < need) { const lack = comboParts(pr.id).filter(c => +(P(c.component_product_id)?.stock||0) < c.quantity * (need - pr.stock)).map(c => `${pName(c.component_product_id)} (cần ${fnum(c.quantity * (need - pr.stock))}, còn ${fnum(P(c.component_product_id)?.stock)})`); info += `<br><span class="${lack.length ? "red" : "yellow"}">sẽ tự đóng thêm ${need - pr.stock} combo${lack.length ? " — thiếu: " + esc(lack.join(", ")) : ""}</span>`; } else if (pr && pr.stock < need) info += `<br><span class="red">không đủ hàng</span>`;
+        return `<tr><td><select class="${!it.product_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','items.${i}.product_id',this.value)">${optProducts(it.product_id)}</select></td><td style="width:90px"><input type="number" value="${esc(it.qty ?? "")}" ${dis} onchange="setP('${a.key}','items.${i}.qty',this.value,'number')"></td><td>${info}</td></tr>`; }).join("")}</table>`;
+  } else if (a.type === "reconcile") {
+    const sid = p.store_id;
+    body = `<div class="grid"><div><label>Cửa hàng</label><select class="${!sid ? "bad" : ""}" ${dis} onchange="setP('${a.key}','store_id',this.value)">${optStores(sid)}</select></div>${fld(a,"note",p.note,"text","Ghi chú",dis)}</div>
+      <table><tr><th>Sản phẩm</th><th>Đang giữ</th><th>Bán</th><th>Hỏng</th><th>Trả về</th><th>Phải thu</th></tr>${(p.items||[]).map((it, i) => { const pr = P(it.product_id); const held = sid && it.product_id ? heldQty(sid, it.product_id) : 0; const over = (+it.sold_qty||0) + (+it.broken_qty||0) + (+it.returned_qty||0) > held;
+        return `<tr><td><select class="${!it.product_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','items.${i}.product_id',this.value)">${optProducts(it.product_id)}</select></td><td class="${over ? "red" : ""}">${fnum(held)}</td>
+        ${["sold_qty","broken_qty","returned_qty"].map(k => `<td style="width:70px"><input type="number" value="${esc(it[k] ?? 0)}" ${dis} onchange="setP('${a.key}','items.${i}.${k}',this.value,'number')"></td>`).join("")}<td>${pr ? money((+it.sold_qty||0) * (pr.retail_price - pr.store_share)) : ""}</td></tr>`; }).join("")}</table>`;
+  } else if (a.type === "record_payment") {
+    const sto = ST(p.store_id);
+    body = `<div class="grid"><div><label>Cửa hàng</label><select class="${!p.store_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','store_id',this.value)">${optStores(p.store_id)}</select></div>
+      ${fld(a,"amount",p.amount,"number","Số tiền thu",dis)}<div><label>Hình thức</label><select ${dis} onchange="setP('${a.key}','method',this.value)">${[["cash","Tiền mặt"],["bank_transfer","Chuyển khoản"],["other","Khác"]].map(([v,l]) => `<option value="${v}" ${(p.method||"cash") === v ? "selected" : ""}>${l}</option>`).join("")}</select></div>${fld(a,"note",p.note,"text","Ghi chú",dis)}</div>
+      ${sto ? `<div class="mut">Công nợ hiện tại: <b>${money(sto.debt)}</b> → sau khi thu: <b>${money(sto.debt - (+p.amount||0))}</b></div>` : ""}`;
+  } else if (a.type === "create_store") {
+    const dup = S.stores.find(s => norm(s.name) === norm(p.name));
+    body = `<div class="grid">${fld(a,"name",p.name,"text","Tên cửa hàng",dis)}${fld(a,"area",p.area,"text","Khu vực",dis)}${fld(a,"phone",p.phone,"text","Điện thoại",dis)}${fld(a,"address",p.address,"text","Địa chỉ",dis)}${fld(a,"contact_name",p.contact_name,"text","Người liên hệ",dis)}</div>${dup ? `<div class="warn">Đã có cửa hàng "${esc(dup.name)}"${dup.area ? " – " + esc(dup.area) : ""}.</div>` : ""}`;
+  } else if (a.type === "create_product") {
+    body = `<div class="grid">${fld(a,"name",p.name,"text","Tên sản phẩm",dis)}${fld(a,"sku",p.sku,"text","Mã (để trống = tự tạo)",dis)}<div><label>Nhóm</label><select ${dis} onchange="setP('${a.key}','category',this.value)">${S.categories.filter(c => c.name !== "Combo").map(c => `<option ${c.name === (p.category||"Khác") ? "selected" : ""}>${esc(c.name)}</option>`).join("")}</select></div>${fld(a,"unit",p.unit || "cái","text","ĐVT",dis)}${fld(a,"cost",p.cost,"number","Giá vốn",dis)}${fld(a,"retail_price",p.retail_price,"number","Giá bán lẻ",dis)}${fld(a,"store_share",p.store_share,"number","Điểm bán hưởng",dis)}${fld(a,"min_stock",p.min_stock,"number","Tồn tối thiểu",dis)}</div>`;
+  } else if (a.type === "create_combo") {
+    body = `<div class="grid">${fld(a,"name",p.name,"text","Tên combo",dis)}${fld(a,"sku",p.sku,"text","Mã combo",dis)}${fld(a,"retail_price",p.retail_price,"number","Giá bán lẻ",dis)}${fld(a,"store_share",p.store_share,"number","Điểm bán hưởng",dis)}</div>
+      <table><tr><th>Thành phần</th><th>Định mức</th></tr>${(p.components||[]).map((it, i) => `<tr><td><select class="${!it.product_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','components.${i}.product_id',this.value)">${optProducts(it.product_id, x => !isCombo(x))}</select></td><td style="width:90px"><input type="number" value="${esc(it.qty ?? 1)}" ${dis} onchange="setP('${a.key}','components.${i}.qty',this.value,'number')"></td></tr>`).join("")}</table>`;
+  } else if (a.type === "build_combo") {
+    body = `<div class="grid"><div><label>Combo</label><select class="${!p.combo_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','combo_id',this.value)">${optProducts(p.combo_id, isCombo)}</select></div>${fld(a,"qty",p.qty,"number","Số combo cần đóng",dis)}</div>${p.combo_id ? `<div class="mut">Có thể đóng tối đa: <b>${canBuild(p.combo_id)}</b> • Thành phần: ${comboParts(p.combo_id).map(c => `${c.quantity}× ${esc(pName(c.component_product_id))}`).join(", ")}</div>` : ""}`;
+  } else if (a.type === "assign_rack") {
+    body = `<div class="grid">${fld(a,"code",p.code,"text","Mã kệ",dis)}<div><label>Cửa hàng</label><select class="${!p.store_id ? "bad" : ""}" ${dis} onchange="setP('${a.key}','store_id',this.value)">${optStores(p.store_id)}</select></div>${fld(a,"asset_value",p.asset_value ?? 600000,"number","Giá trị kệ",dis)}${fld(a,"deposit",p.deposit ?? 0,"number","Tiền cọc",dis)}</div>`;
+  }
+  const warn = a.warnings.length ? a.warnings.map(w => `<div class="warn">⚠️ ${esc(w)}</div>`).join("") : "";
+  const conf = `<span class="badge ${a.confidence >= 0.85 ? "" : a.confidence >= 0.7 ? "i" : "w"}">AI chắc chắn ${Math.round(a.confidence*100)}%</span>`;
+  let foot = "";
+  if (s.status === "pending") foot = `<div class="btns"><button class="secondary" onclick="cancelAction('${a.key}')">Hủy</button><button class="ok" onclick="confirmAction('${a.key}')">✅ Xác nhận ${esc((ACT_LABEL[a.type]||"").toLowerCase())}</button></div>`;
+  else if (s.status === "running") foot = `<div class="mut typing">⏳ Đang ghi dữ liệu…</div>`;
+  else if (s.status === "done") foot = `<div class="note good" style="margin-top:8px">✅ Đã thực hiện. ${esc(s.msg || "")}</div>`;
+  else if (s.status === "cancelled") foot = `<div class="mut">Đã hủy — không ghi dữ liệu.</div>`;
+  else if (s.status === "failed") foot = `<div class="note err" style="margin-top:8px">❌ ${esc(s.error)}</div><div class="btns"><button class="secondary" onclick="cancelAction('${a.key}')">Bỏ</button><button class="primary" onclick="retryAction('${a.key}')">Sửa & thử lại</button></div>`;
+  return `<div class="act ${cls}" id="act-${a.key}"><h4>🧠 AI đã hiểu: ${esc(ACT_LABEL[a.type] || a.type)} ${conf}</h4>${low && s.status === "pending" ? `<div class="warn"><b>Kiểm tra kỹ trước khi xác nhận</b> — các ô viền đỏ cần chọn/điền.</div>` : ""}${warn}${body}${foot}</div>`;
+}
+function findAct(key){ for (const m of chat) for (const a of (m.actions||[])) if (a.key === key) return a; return null; }
+function setP(key, path, val, type){
+  const a = findAct(key); if (!a) return;
+  if (type === "number") val = val === "" ? null : +val;
+  const parts = path.split("."); let o = a.p; for (let i = 0; i < parts.length - 1; i++) o = o[parts[i]];
+  o[parts.at(-1)] = val; saveChat(); rerenderAct(a);
+}
+function rerenderAct(a){ const el = $("act-" + a.key); if (el) el.outerHTML = actionCard(a); }
+async function logAction(a){
+  if (!user) return;
+  try { const { data, error } = await sb.from("ai_commands").insert({ command_text: a.cmd || ACT_LABEL[a.type], action_type: a.type, parsed_data: { params: a.p, confidence: a.confidence, warnings: a.warnings }, status: "pending" }).select("id").single(); if (!error) { a.logId = data.id; saveChat(); } } catch (e) {}
+}
+async function updLog(a, status, result){ if (!a.logId) return; try { const patch = { status, result: result ?? null }; if (status === "confirmed") patch.confirmed_at = new Date().toISOString(); if (status === "executed" || status === "failed") patch.executed_at = new Date().toISOString(); await sb.from("ai_commands").update(patch).eq("id", a.logId); } catch (e) {} }
+function cancelAction(key){ const a = findAct(key); if (!a) return; actState[key] = { status:"cancelled" }; a.status = "cancelled"; updLog(a, "cancelled"); saveChat(); rerenderAct(a); }
+function retryAction(key){ const a = findAct(key); if (!a) return; actState[key] = { status:"pending" }; a.status = "pending"; saveChat(); rerenderAct(a); }
+
+
+function validate(a){
+  const p = a.p, e = [];
+  const needItems = (arr, f) => { if (!arr || !arr.length) e.push("Chưa có dòng hàng."); (arr||[]).forEach((it, i) => f(it, i)); };
+  switch (a.type) {
+    case "stock_in": needItems(p.items, (it, i) => { if (it.product_id === "__skip__") return; if (!it.product_id) e.push(`Dòng ${i+1}: chưa chọn sản phẩm.`); if (!(+it.qty > 0)) e.push(`Dòng ${i+1}: số lượng phải > 0.`); if (+it.unit_cost < 0) e.push(`Dòng ${i+1}: đơn giá âm.`); });
+      if ((p.items||[]).every(it => it.product_id === "__skip__")) e.push("Tất cả dòng đều bị bỏ qua."); break;
+    case "consign": if (!p.store_id) e.push("Chưa chọn cửa hàng."); needItems(p.items, (it, i) => { const pr = P(it.product_id); if (!pr) return e.push(`Dòng ${i+1}: chưa chọn sản phẩm.`); if (!(+it.qty > 0)) e.push(`Dòng ${i+1}: số lượng phải > 0.`); const avail = +pr.stock + (isCombo(pr) ? canBuild(pr.id) : 0); if (+it.qty > avail) e.push(`${pr.name}: kho chỉ đủ ${avail}.`); }); break;
+    case "reconcile": if (!p.store_id) e.push("Chưa chọn cửa hàng."); needItems(p.items, (it, i) => { if (!it.product_id) return e.push(`Dòng ${i+1}: chưa chọn sản phẩm.`); const t = (+it.sold_qty||0) + (+it.broken_qty||0) + (+it.returned_qty||0); if ([it.sold_qty,it.broken_qty,it.returned_qty].some(v => +v < 0)) e.push(`Dòng ${i+1}: số âm.`); if (t > heldQty(p.store_id, it.product_id)) e.push(`${pName(it.product_id)}: bán+hỏng+trả vượt số đang giữ (${heldQty(p.store_id, it.product_id)}).`); }); break;
+    case "record_payment": { if (!p.store_id) e.push("Chưa chọn cửa hàng."); if (!(+p.amount > 0)) e.push("Số tiền phải > 0."); const s = ST(p.store_id); if (s && +p.amount > +s.debt) e.push(`Số tiền lớn hơn công nợ (${money(s.debt)}).`); break; }
+    case "create_store": if (!String(p.name||"").trim()) e.push("Chưa có tên cửa hàng."); break;
+    case "create_product": if (!String(p.name||"").trim()) e.push("Chưa có tên sản phẩm."); break;
+    case "create_combo": if (!String(p.name||"").trim()) e.push("Chưa có tên combo."); if (!(p.components||[]).length) e.push("Chưa có thành phần."); (p.components||[]).forEach((c, i) => { if (!c.product_id) e.push(`Thành phần ${i+1}: chưa chọn.`); if (!(+c.qty > 0)) e.push(`Thành phần ${i+1}: định mức > 0.`); }); break;
+    case "build_combo": if (!p.combo_id) e.push("Chưa chọn combo."); if (!(+p.qty > 0)) e.push("Số lượng phải > 0."); else if (p.combo_id && +p.qty > canBuild(p.combo_id)) e.push(`Vật tư chỉ đủ đóng ${canBuild(p.combo_id)} combo.`); break;
+    case "assign_rack": if (!String(p.code||"").trim()) e.push("Chưa có mã kệ."); if (!p.store_id) e.push("Chưa chọn cửa hàng."); break;
+    default: e.push("Thao tác không được hỗ trợ.");
+  }
+  return e;
+}
+async function rpc(fn, p){ const { data, error } = await sb.rpc(fn, { p }); if (error) throw error; return data; }
+async function execute(a){
+  const p = a.p;
+  switch (a.type) {
+    case "stock_in": {
+      const items = [];
+      for (const it of p.items) {
+        if (it.product_id === "__skip__") continue;
+        let pid = it.product_id;
+        if (pid === "__new__") { const r = await rpc("tv_create_product", { name: it.name_on_doc || it.product_sku, cost: +it.unit_cost || 0, category: "Khác", unit: it.unit || "cái", source_type: p.receipt_type === "production" ? "manufactured" : "purchased" }); pid = r.product_id; }
+        items.push({ product_id: pid, qty: +it.qty, unit_cost: +it.unit_cost || 0 });
+      }
+      const note = [p.doc_no ? "Số CT " + p.doc_no : "", p.doc_date ? "Ngày CT " + p.doc_date : "", p.note || "", a.logId ? "(Trợ lý AI)" : ""].filter(Boolean).join(" • ");
+      const r = await rpc("tv_stock_in", { receipt_type: p.receipt_type || "production", supplier: p.supplier || "", note, items });
+      return { r, msg: `Đã nhập ${r.lines} dòng hàng${r.total ? ", giá trị " + money(r.total) : ""}.` };
+    }
+    case "consign": { const r = await rpc("tv_consign", { store_id: p.store_id, note: p.note || "", auto_build: true, items: p.items.map(it => ({ product_id: it.product_id, qty: +it.qty })) }); return { r, msg: `Đã giao cho ${r.store}.` + ((r.auto_built||[]).length ? " Tự đóng thêm: " + r.auto_built.map(b => b.qty + " " + b.combo).join(", ") + "." : "") }; }
+    case "reconcile": { const r = await rpc("tv_reconcile", { store_id: p.store_id, note: p.note || "", items: p.items.map(it => ({ product_id: it.product_id, sold_qty: +it.sold_qty||0, broken_qty: +it.broken_qty||0, returned_qty: +it.returned_qty||0 })) }); return { r, msg: `Phải thu thêm ${money(r.amount_due)} • Công nợ mới ${money(r.new_debt)}.` }; }
+    case "record_payment": { const r = await rpc("tv_record_payment", { store_id: p.store_id, amount: +p.amount, method: p.method || "cash", note: p.note || "" }); return { r, msg: `Công nợ còn ${money(r.new_debt)}.` }; }
+    case "create_store": { const r = await rpc("tv_create_store", p); return { r, msg: `Đã thêm cửa hàng ${r.name}.` }; }
+    case "create_product": { const r = await rpc("tv_create_product", p); return { r, msg: `Mã ${r.sku}.` }; }
+    case "create_combo": { const r = await rpc("tv_create_combo", { ...p, components: p.components.map(c => ({ product_id: c.product_id, qty: +c.qty })) }); return { r, msg: `Mã ${r.sku}, giá vốn ${money(r.cost)}.` }; }
+    case "build_combo": { const r = await rpc("tv_build_combo", { combo_id: p.combo_id, qty: +p.qty }); return { r, msg: `Đã đóng ${r.qty} combo.` }; }
+    case "assign_rack": { const r = await rpc("tv_assign_rack", { code: p.code, store_id: p.store_id, asset_value: p.asset_value, deposit: p.deposit, note: p.note }); return { r, msg: `Kệ ${r.code}.` }; }
+  }
+}
+async function confirmAction(key){
+  const a = findAct(key); if (!a) return;
+  if (!user) return toast("Cần đăng nhập ở tab Kết nối.", "err");
+  const errs = validate(a);
+  if (errs.length) { toast("⚠️ " + errs.map(esc).join("<br>"), "err"); return; }
+  actState[key] = { status:"running" }; rerenderAct(a);
+  await updLog(a, "confirmed");
+  try {
+    const { r, msg } = await execute(a);
+    actState[key] = { status:"done", msg }; a.status = "done";
+    await updLog(a, "executed", r);
+    await loadAll(true);
+  } catch (e) {
+    const m = friendlyDbError(e); actState[key] = { status:"failed", error: m }; a.status = "failed";
+    await updLog(a, "failed", { error: m });
+  }
+  saveChat(); if (page === "🤖 Trợ lý AI") renderMsgs(); else rerenderAct(a);
+}
+// Dùng lại kiểm tra + thực thi cho các form thủ công
+function manualAction(type, p){
+  const a = prepareAction({ type, params: p, confidence: 1, warnings: [] }, "Nhập tay: " + ACT_LABEL[type]);
+  Object.assign(a.p, p);
+  const errs = validate(a); if (errs.length) return toast("⚠️ " + errs.map(esc).join("<br>"), "err");
+  actState[a.key] = { status:"running" };
+  (async () => { try { const { msg } = await execute(a); toast("✅ " + esc(ACT_LABEL[type]) + ": " + esc(msg), "good"); await loadAll(true); } catch (e) { toast("❌ " + esc(friendlyDbError(e)), "err"); } })();
+}
+
+
+let page = LS.get("tvt-page", "🤖 Trợ lý AI"); if (!MENUS.includes(page)) page = "🤖 Trợ lý AI";
+function go(x){ page = x; LS.set("tvt-page", x); render(); window.scrollTo(0, 0); }
+const card = (a, b, c = "") => `<div class="card"><div class="mut">${a}</div><div class="num ${c}">${b}</div></div>`;
+const tbl = (head, rows, empty = "Chưa có dữ liệu") => `<div class="table"><table><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>${rows.length ? rows.join("") : `<tr><td colspan="${head.length}" class="empty">${empty}</td></tr>`}</table></div>`;
+function needLogin(){ return `<div class="panel login"><h3>🔐 Cần đăng nhập</h3><div class="mut">Dữ liệu TV TƯỢNG được lưu an toàn trên Supabase. Đăng nhập để xem và thao tác.</div>${loginForm()}</div>`; }
+function loginForm(){ return `<div class="form" style="margin-top:10px"><input id="lemail" type="email" autocomplete="username" placeholder="Email"><input id="lpass" type="password" autocomplete="current-password" placeholder="Mật khẩu" onkeydown="if(event.key==='Enter')doLogin()"><button class="primary" onclick="doLogin()">Đăng nhập</button></div><div id="lmsg" class="mut" style="margin-top:8px"></div>`; }
+async function doLogin(){
+  if (!initSB()) return toast(esc(loadErr), "err");
+  const email = $("lemail").value.trim(), password = $("lpass").value;
+  if (!email || !password) return ($("lmsg").textContent = "Nhập email và mật khẩu.");
+  $("lmsg").textContent = "⏳ Đang đăng nhập…";
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { $("lmsg").textContent = "❌ " + (/Invalid login/i.test(error.message) ? "Sai email hoặc mật khẩu." : error.message); return; }
+  user = data.user; toast("✅ Đăng nhập thành công", "good"); loadAll();
+}
+async function doLogout(){ if (!confirm("Đăng xuất khỏi thiết bị này?")) return; await sb.auth.signOut(); user = null; render(); }
+
+function render(){
+  $("tabs").innerHTML = MENUS.map(x => `<button class="tab ${x === page ? "on" : ""}" onclick="go('${x}')">${x}</button>`).join("");
+  $("who").innerHTML = user ? `${esc(user.email)}<br><button onclick="loadAll()">⟳ Làm mới</button>` : `<button onclick="go('Kết nối')">Đăng nhập</button>`;
+  const M = $("main");
+  const status = loadErr ? `<div class="note err">⚠️ ${esc(loadErr)} <button class="secondary" style="padding:5px 9px" onclick="loadAll()">Thử lại</button></div>` : loading ? `<div class="note info">⏳ Đang tải dữ liệu từ Supabase…</div>` : "";
+  if (page === "🤖 Trợ lý AI") { const keep = $("cmd")?.value || ""; M.innerHTML = status + chatHTML(); $("cmd").value = keep; renderMsgs(); renderAtt(); return; }
+  if (page === "Kết nối") { M.innerHTML = pageConnect(); return; }
+  if (page === "⚙️ AI") { M.innerHTML = pageAI(); return; }
+  if (!user) { M.innerHTML = status + needLogin(); return; }
+  const fn = { "Tổng quan":pageHome, "Sản phẩm":pageProducts, "Nhập kho":pageReceipt, "Kho":pageStock, "Combo":pageCombo, "Điểm bán":pageStores, "Kệ":pageRacks, "Ký gửi":pageConsign, "Đối soát":pageRecon, "Thu tiền":pagePay, "Báo cáo":pageReport, "Dữ liệu":pageData }[page];
+  M.innerHTML = status + (fn ? fn() : "");
+}
+
+function pageHome(){
+  const a = analytics(), al = alertsList(a);
+  return `<h2>Tổng quan</h2><div class="cards">${card("Điểm bán", S.stores.filter(s => s.active !== false).length) + card("Kệ đang đặt", S.racks.filter(r => r.status === "assigned").length) + card("Mặt hàng", S.products.filter(p => p.active !== false).length) + card("Tồn kho xưởng", fnum(S.products.reduce((x, p) => x + +p.stock, 0))) + card("Hàng tại điểm bán", fnum(S.inv.reduce((x, i) => x + +i.quantity, 0))) + card("Công nợ", money(a.debtors.reduce((x, s) => x + +s.debt, 0)), "red") + card("Doanh thu lẻ tháng này", money(a.mon.retail)) + card("Đã thu tháng này", money(a.paidMonth), "green")}</div>
+  <div class="panel"><h3>🔔 Cảnh báo & gợi ý</h3>${al.length ? `<ul class="alerts" style="padding-left:18px;margin:0">${al.map(([k, t]) => `<li><span class="badge ${k}">${{ e:"Gấp", w:"Chú ý", i:"Gợi ý" }[k]}</span> ${t}</li>`).join("")}</ul>` : `<div class="mut">✅ Chưa có cảnh báo.</div>`}
+  <div class="toolbar"><button class="primary" onclick="go('🤖 Trợ lý AI');setTimeout(()=>sendText('Phân tích tình hình kinh doanh và đề xuất việc cần làm hôm nay'),50)">🤖 Nhờ AI tư vấn hôm nay</button></div></div>
+  <div class="note info"><b>Luồng chuẩn:</b> Nhập/Sản xuất → Kho → Đóng Combo → Giao ký gửi → Đối soát → Thu tiền → Báo cáo.</div>`;
+}
+function pageProducts(){
+  const cats = S.categories.filter(c => c.name !== "Combo");
+  return `<h2>Sản phẩm</h2><div class="panel"><h3>＋ Thêm sản phẩm mới</h3><div class="form">
+    <div><label>Tên sản phẩm *</label><input id="np_name"></div><div><label>Mã (trống = tự tạo)</label><input id="np_sku"></div>
+    <div><label>Nhóm</label><select id="np_cat">${cats.map(c => `<option>${esc(c.name)}</option>`).join("")}</select></div>
+    <div><label>Nguồn</label><select id="np_src"><option value="manufactured">Xưởng sản xuất</option><option value="purchased">Mua ngoài</option></select></div>
+    <div><label>ĐVT</label><input id="np_unit" value="cái"></div><div><label>Giá vốn</label><input id="np_cost" type="number"></div><div><label>Giá bán lẻ</label><input id="np_price" type="number"></div><div><label>Điểm bán hưởng</label><input id="np_share" type="number"></div><div><label>Tồn tối thiểu</label><input id="np_min" type="number"></div>
+    <button class="primary" onclick="manualAction('create_product',{name:np_name.value,sku:np_sku.value,category:np_cat.value,source_type:np_src.value,unit:np_unit.value,cost:+np_cost.value||0,retail_price:+np_price.value||0,store_share:+np_share.value||0,min_stock:+np_min.value||0})">Lưu sản phẩm</button></div></div>
+  ${tbl(["Mã","Tên","Nhóm","ĐVT","Giá vốn","Giá bán","Điểm hưởng","Tồn","Tối thiểu",""], S.products.map(p => `<tr style="${p.active === false ? "opacity:.5" : ""}"><td>${esc(p.sku)}</td><td><b>${esc(p.name)}</b>${isCombo(p) ? ' <span class="badge i">combo</span>' : ""}</td><td>${esc(catName(p))}</td><td>${esc(p.unit)}</td><td>${money(p.cost)}</td><td>${money(p.retail_price)}</td><td>${money(p.store_share)}</td><td class="${+p.stock <= +p.min_stock ? "red" : ""}">${fnum(p.stock)}</td><td>${fnum(p.min_stock)}</td>
+    <td><button class="secondary" style="padding:6px 9px" onclick="editProduct('${p.id}')">Sửa giá</button> <button class="secondary" style="padding:6px 9px" onclick="toggleProduct('${p.id}')">${p.active === false ? "Bật" : "Ngừng"}</button></td></tr>`))}`;
+}
+async function editProduct(id){
+  const p = P(id); if (!p) return;
+  const v = prompt(`Sửa "${p.name}"\nNhập: giá vốn; giá bán; điểm hưởng; tồn tối thiểu`, [p.cost, p.retail_price, p.store_share, p.min_stock].map(x => +x).join("; "));
+  if (v === null) return; const n = v.split(/[;,]/).map(x => +x.trim());
+  if (n.length !== 4 || n.some(x => isNaN(x) || x < 0)) return toast("Nhập đủ 4 số không âm, cách nhau bằng dấu ;", "err");
+  const { error } = await sb.from("products").update({ cost:n[0], retail_price:n[1], store_share:n[2], min_stock:n[3] }).eq("id", id);
+  if (error) return toast("❌ " + esc(friendlyDbError(error)), "err"); toast("✅ Đã cập nhật giá", "good"); loadAll(true);
+}
+async function toggleProduct(id){ const p = P(id); const { error } = await sb.from("products").update({ active: p.active === false }).eq("id", id); if (error) return toast("❌ " + esc(friendlyDbError(error)), "err"); loadAll(true); }
+let rcLines = [{ pid:"", qty:"", cost:"" }];
+function pageReceipt(){
+  const rows = S.receipts.map(r => `<tr><td>${dt(r.created_at)}</td><td>${{ purchase:"Mua", production:"Sản xuất", return:"Trả về", adjustment:"Điều chỉnh" }[r.receipt_type] || r.receipt_type}</td><td>${esc(r.suppliers?.name || "")}</td><td>${(r.stock_receipt_items||[]).map(i => `${fnum(i.quantity)} × ${esc(pName(i.product_id))}${+i.unit_cost ? " @" + fnum(i.unit_cost) : ""}`).join("<br>")}</td><td>${esc(r.note || "")}</td></tr>`);
+  return `<h2>Nhập hàng / Sản xuất</h2><div class="panel"><div class="note info" style="margin:0 0 10px">💡 Có hóa đơn? Vào <b>🤖 Trợ lý AI</b> bấm 📷 chụp hóa đơn — AI đọc và lập phiếu giúp.</div>
+    <div class="form"><div><label>Loại</label><select id="rc_type"><option value="production">Sản xuất</option><option value="purchase">Mua nhà cung cấp</option><option value="return">Hàng trả về</option><option value="adjustment">Điều chỉnh tăng</option></select></div><div><label>Nhà cung cấp</label><input id="rc_sup" list="suplist"><datalist id="suplist">${S.suppliers.map(s => `<option value="${esc(s.name)}">`).join("")}</datalist></div><div><label>Ghi chú</label><input id="rc_note"></div></div>
+    <div class="scroll-x"><table style="min-width:0;margin-top:10px"><tr><th>Sản phẩm</th><th style="width:90px">SL</th><th style="width:110px">Đơn giá</th><th></th></tr>${rcLines.map((l, i) => `<tr><td><select onchange="rcLines[${i}].pid=this.value">${optProducts(l.pid, p => !isCombo(p))}</select></td><td><input type="number" value="${esc(l.qty)}" onchange="rcLines[${i}].qty=this.value"></td><td><input type="number" value="${esc(l.cost)}" onchange="rcLines[${i}].cost=this.value"></td><td><button class="danger" style="padding:6px 9px" onclick="rcLines.splice(${i},1);if(!rcLines.length)rcLines.push({pid:'',qty:'',cost:''});render()">✕</button></td></tr>`).join("")}</table></div>
+    <div class="toolbar"><button class="secondary" onclick="rcLines.push({pid:'',qty:'',cost:''});render()">＋ Thêm dòng</button><button class="primary" onclick="submitReceipt()">Nhập kho</button></div></div>
+    <h3 style="margin-top:16px">Lịch sử nhập</h3>${tbl(["Ngày","Loại","NCC","Hàng","Ghi chú"], rows)}`;
+}
+function submitReceipt(){ manualAction("stock_in", { receipt_type: rc_type.value, supplier: rc_sup.value, note: rc_note.value, items: rcLines.filter(l => l.pid || l.qty).map(l => ({ product_id: l.pid, qty: +l.qty, unit_cost: +l.cost || 0, name_on_doc: pName(l.pid) })) }); rcLines = [{ pid:"", qty:"", cost:"" }]; }
+function pageStock(){
+  const a = analytics();
+  return `<h2>Tồn kho</h2><div class="cards">${S.products.filter(p => p.active !== false).map(p => `<div class="card"><div class="mut">${esc(p.name)}</div><div class="num ${+p.stock <= +p.min_stock ? "red" : "green"}">${fnum(p.stock)} <span style="font-size:13px">${esc(p.unit)}</span></div><div class="mut">Tối thiểu ${fnum(p.min_stock)} • tại điểm bán ${fnum(heldTotalProduct(p.id))}${a.sold30[p.id] ? " • bán 30n " + fnum(a.sold30[p.id]) : ""}${isCombo(p) ? " • đóng thêm được " + canBuild(p.id) : ""}</div></div>`).join("")}</div>
+  <div class="note">🔔 Màu đỏ = chạm mức tồn tối thiểu, cần sản xuất hoặc nhập thêm.</div>
+  <h3 style="margin-top:16px">Hàng đang ở điểm bán</h3>${tbl(["Cửa hàng","Sản phẩm","SL"], S.inv.filter(i => +i.quantity > 0).map(i => `<tr><td>${esc(sName(i.store_id))}</td><td>${esc(pName(i.product_id))}</td><td>${fnum(i.quantity)}</td></tr>`))}`;
+}
+let cbLines = [{ pid:"", qty:1 }];
+function pageCombo(){
+  const combos = S.products.filter(isCombo);
+  return `<h2>Combo sản phẩm</h2><div class="panel"><h3>📦 Đóng combo từ vật tư</h3><div class="form"><div><label>Combo</label><select id="bc_id">${optProducts("", isCombo)}</select></div><div><label>Số combo</label><input id="bc_qty" type="number"></div><button class="primary" onclick="manualAction('build_combo',{combo_id:bc_id.value,qty:+bc_qty.value})">Kiểm tra & đóng</button></div></div>
+  ${tbl(["Mã","Combo","Thành phần","Giá bán","Điểm hưởng","Giá vốn","Tồn","Đóng thêm được"], combos.map(c => `<tr><td>${esc(c.sku)}</td><td><b>${esc(c.name)}</b></td><td>${comboParts(c.id).map(b => `${fnum(b.quantity)}× ${esc(pName(b.component_product_id))}`).join("<br>")}</td><td>${money(c.retail_price)}</td><td>${money(c.store_share)}</td><td>${money(comboParts(c.id).reduce((x, b) => x + (+P(b.component_product_id)?.cost || 0) * b.quantity, 0))}</td><td>${fnum(c.stock)}</td><td>${canBuild(c.id)}</td></tr>`), "Chưa có combo. Tạo combo bên dưới hoặc nói với Trợ lý AI: \"Tạo Combo Kids gồm 1 tượng tiêu chuẩn, 1 bộ màu 6 màu, 1 cọ, 1 khay, 1 túi, giá 30000, điểm bán hưởng 7000\".")}
+  <div class="panel"><h3>＋ Tạo combo mới</h3><div class="form"><div><label>Tên combo *</label><input id="cc_name"></div><div><label>Mã</label><input id="cc_sku" placeholder="COMBO-.."></div><div><label>Giá bán lẻ</label><input id="cc_price" type="number"></div><div><label>Điểm bán hưởng</label><input id="cc_share" type="number"></div></div>
+  <table style="min-width:0;margin-top:10px"><tr><th>Thành phần</th><th style="width:90px">Định mức</th><th></th></tr>${cbLines.map((l, i) => `<tr><td><select onchange="cbLines[${i}].pid=this.value">${optProducts(l.pid, p => !isCombo(p))}</select></td><td><input type="number" value="${esc(l.qty)}" onchange="cbLines[${i}].qty=this.value"></td><td><button class="danger" style="padding:6px 9px" onclick="cbLines.splice(${i},1);if(!cbLines.length)cbLines.push({pid:'',qty:1});render()">✕</button></td></tr>`).join("")}</table>
+  <div class="toolbar"><button class="secondary" onclick="cbLines.push({pid:'',qty:1});render()">＋ Thêm thành phần</button><button class="primary" onclick="manualAction('create_combo',{name:cc_name.value,sku:cc_sku.value,retail_price:+cc_price.value||0,store_share:+cc_share.value||0,components:cbLines.filter(l=>l.pid).map(l=>({product_id:l.pid,qty:+l.qty}))});cbLines=[{pid:'',qty:1}]">Tạo combo</button></div></div>`;
+}
+function pageStores(){
+  const a = analytics();
+  return `<h2>Điểm bán</h2><div class="panel"><div class="form"><div><label>Tên cửa hàng *</label><input id="ns_name"></div><div><label>Khu vực</label><input id="ns_area"></div><div><label>Điện thoại</label><input id="ns_phone"></div><div><label>Địa chỉ</label><input id="ns_addr"></div><div><label>Người liên hệ</label><input id="ns_contact"></div><button class="primary" onclick="manualAction('create_store',{name:ns_name.value,area:ns_area.value,phone:ns_phone.value,address:ns_addr.value,contact_name:ns_contact.value})">Thêm điểm bán</button></div></div>
+  ${tbl(["Cửa hàng","Khu vực","Liên hệ","Kệ","Hàng đang giữ","Bán 30 ngày","Đối soát gần nhất","Công nợ"], a.storeRows.map(r => { const s = ST(r.id); return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.area || "")}</td><td>${esc([s.contact_name, s.phone].filter(Boolean).join(" • "))}</td><td>${r.racks}</td><td>${heldAt(r.id).map(i => `<span class="pill">${fnum(i.quantity)} ${esc(pName(i.product_id))}</span>`).join("") || 0}</td><td>${fnum(r.sold30)}</td><td>${r.lastRec ? dOnly(r.lastRec) : "—"}</td><td class="${r.debt ? "red" : ""}">${money(r.debt)}</td></tr>`; }), "Chưa có điểm bán. Thêm ở trên hoặc nói với Trợ lý AI.")}`;
+}
+function pageRacks(){
+  return `<h2>Kệ / tài sản cho mượn</h2><div class="panel"><div class="form"><div><label>Mã kệ *</label><input id="rk_code" placeholder="K001"></div><div><label>Cửa hàng</label><select id="rk_sid">${optStores("")}</select></div><div><label>Giá trị kệ</label><input id="rk_val" type="number" value="600000"></div><div><label>Tiền cọc</label><input id="rk_dep" type="number" value="0"></div><button class="primary" onclick="manualAction('assign_rack',{code:rk_code.value,store_id:rk_sid.value,asset_value:+rk_val.value||0,deposit:+rk_dep.value||0})">Bàn giao kệ</button></div></div>
+  ${tbl(["Mã","Điểm đặt","Giá trị","Cọc","Ngày giao","Trạng thái",""], S.racks.map(r => `<tr><td>${esc(r.code)}</td><td>${esc(r.store_id ? sName(r.store_id) : "Kho")}</td><td>${money(r.asset_value)}</td><td>${money(r.deposit)}</td><td>${dOnly(r.assigned_at)}</td><td><span class="badge ${r.status === "assigned" ? "" : "i"}">${{ assigned:"Đang cho mượn", warehouse:"Trong kho", repair:"Sửa chữa", retired:"Thanh lý" }[r.status] || r.status}</span></td><td>${r.status === "assigned" ? `<button class="secondary" style="padding:6px 9px" onclick="returnRack('${r.id}')">Thu hồi</button>` : ""}</td></tr>`))}`;
+}
+async function returnRack(id){ if (!confirm("Thu hồi kệ này về kho?")) return; try { await rpc("tv_return_rack", { rack_id: id }); toast("✅ Đã thu hồi kệ", "good"); loadAll(true); } catch (e) { toast("❌ " + esc(friendlyDbError(e)), "err"); } }
+let csLines = [{ pid:"", qty:"" }];
+function pageConsign(){
+  return `<h2>Giao hàng ký gửi</h2><div class="panel"><div class="form"><div><label>Cửa hàng *</label><select id="cs_sid">${optStores("")}</select></div><div><label>Ghi chú</label><input id="cs_note"></div></div>
+  <table style="min-width:0;margin-top:10px"><tr><th>Sản phẩm / Combo</th><th style="width:90px">SL</th><th></th></tr>${csLines.map((l, i) => `<tr><td><select onchange="csLines[${i}].pid=this.value">${optProducts(l.pid)}</select></td><td><input type="number" value="${esc(l.qty)}" onchange="csLines[${i}].qty=this.value"></td><td><button class="danger" style="padding:6px 9px" onclick="csLines.splice(${i},1);if(!csLines.length)csLines.push({pid:'',qty:''});render()">✕</button></td></tr>`).join("")}</table>
+  <div class="toolbar"><button class="secondary" onclick="csLines.push({pid:'',qty:''});render()">＋ Thêm dòng</button><button class="primary" onclick="manualAction('consign',{store_id:cs_sid.value,note:cs_note.value,items:csLines.filter(l=>l.pid).map(l=>({product_id:l.pid,qty:+l.qty}))});csLines=[{pid:'',qty:''}]">Giao hàng</button></div><div class="mut">Combo thiếu tồn sẽ được tự đóng thêm từ vật tư (nếu đủ).</div></div>
+  <h3 style="margin-top:16px">Lịch sử giao</h3>${tbl(["Ngày","Cửa hàng","Hàng","Ghi chú"], S.consigns.map(c => `<tr><td>${dt(c.created_at)}</td><td>${esc(sName(c.store_id))}</td><td>${(c.consignment_items||[]).map(i => `${fnum(i.quantity)} × ${esc(pName(i.product_id))}`).join("<br>")}</td><td>${esc(c.note || "")}</td></tr>`))}`;
+}
+let recStore = "";
+function pageRecon(){
+  const held = recStore ? heldAt(recStore) : [];
+  return `<h2>Đối soát bán hàng</h2><div class="panel"><div class="form"><div><label>Cửa hàng</label><select onchange="recStore=this.value;render()">${optStores(recStore)}</select></div></div>
+  ${recStore ? (held.length ? `<table style="min-width:0;margin-top:10px"><tr><th>Sản phẩm</th><th>Đang giữ</th><th>Bán</th><th>Hỏng</th><th>Trả về</th></tr>${held.map(i => `<tr><td>${esc(pName(i.product_id))}<div class="mut">${money(P(i.product_id)?.retail_price)} – hưởng ${money(P(i.product_id)?.store_share)}</div></td><td>${fnum(i.quantity)}</td>${["s","b","r"].map(k => `<td style="width:75px"><input type="number" min="0" id="rc_${k}_${i.product_id}" value="0"></td>`).join("")}</tr>`).join("")}</table>
+    <div class="toolbar"><input id="rec_note" placeholder="Ghi chú" style="max-width:320px"><button class="primary" onclick="submitRecon()">Xác nhận đối soát</button></div>` : `<div class="mut" style="margin-top:10px">Cửa hàng này chưa giữ hàng ký gửi nào.</div>`) : `<div class="mut" style="margin-top:10px">Chọn cửa hàng để hiện hàng đang giữ.</div>`}</div>
+  <h3 style="margin-top:16px">Lịch sử đối soát</h3>${tbl(["Ngày","Cửa hàng","Chi tiết","Phải thu"], S.recs.map(r => `<tr><td>${dt(r.created_at)}</td><td>${esc(sName(r.store_id))}</td><td>${(r.reconciliation_items||[]).map(i => `${esc(pName(i.product_id))}: bán ${fnum(i.sold_qty)}${+i.broken_qty ? ", hỏng " + fnum(i.broken_qty) : ""}${+i.returned_qty ? ", trả " + fnum(i.returned_qty) : ""}`).join("<br>")}</td><td>${money((r.reconciliation_items||[]).reduce((x, i) => x + +i.amount_due, 0))}</td></tr>`))}`;
+}
+function submitRecon(){
+  const items = heldAt(recStore).map(i => ({ product_id: i.product_id, sold_qty: +$("rc_s_" + i.product_id).value || 0, broken_qty: +$("rc_b_" + i.product_id).value || 0, returned_qty: +$("rc_r_" + i.product_id).value || 0 })).filter(x => x.sold_qty + x.broken_qty + x.returned_qty > 0);
+  if (!items.length) return toast("Chưa nhập số bán/hỏng/trả.", "err");
+  const due = items.reduce((x, i) => x + i.sold_qty * (P(i.product_id).retail_price - P(i.product_id).store_share), 0);
+  if (!confirm(`Xác nhận đối soát ${sName(recStore)}?\nPhải thu thêm: ${money(due)}`)) return;
+  manualAction("reconcile", { store_id: recStore, note: $("rec_note").value, items });
+}
+function pagePay(){
+  const debtors = S.stores.filter(s => +s.debt > 0);
+  return `<h2>Thu tiền & công nợ</h2><div class="panel"><div class="form"><div><label>Cửa hàng</label><select id="py_sid">${`<option value="">— Chọn —</option>` + debtors.map(s => `<option value="${s.id}">${esc(s.name)} • nợ ${money(s.debt)}</option>`).join("")}</select></div><div><label>Số tiền thu</label><input id="py_amt" type="number"></div><div><label>Hình thức</label><select id="py_m"><option value="cash">Tiền mặt</option><option value="bank_transfer">Chuyển khoản</option><option value="other">Khác</option></select></div><div><label>Ghi chú</label><input id="py_note"></div>
+  <button class="primary" onclick="if(confirm('Ghi nhận thu '+(+py_amt.value||0).toLocaleString('vi-VN')+'đ?'))manualAction('record_payment',{store_id:py_sid.value,amount:+py_amt.value,method:py_m.value,note:py_note.value})">Ghi nhận thu</button></div></div>
+  <div class="cards" style="margin-top:12px">${debtors.map(s => card(esc(s.name), money(s.debt), "red")).join("") || card("Công nợ", "0đ", "green")}</div>
+  <h3 style="margin-top:16px">Lịch sử thu</h3>${tbl(["Ngày","Cửa hàng","Số tiền","Hình thức","Ghi chú"], S.pays.map(p => `<tr><td>${dt(p.created_at)}</td><td>${esc(sName(p.store_id))}</td><td class="green">${money(p.amount)}</td><td>${{ cash:"Tiền mặt", bank_transfer:"Chuyển khoản", other:"Khác" }[p.payment_method]}</td><td>${esc(p.note || "")}</td></tr>`))}`;
+}
+function pageReport(){
+  const a = analytics(), all = a.all, mon = a.mon;
+  const byStore = {}, byProd = {};
+  a.items.forEach(i => { const s = byStore[i.store_id] ||= { sold:0, retail:0, due:0 }; s.sold += +i.sold_qty; s.retail += i.sold_qty * i.retail_price; s.due += +i.amount_due; const p = byProd[i.product_id] ||= { sold:0, broken:0, due:0, cost:0 }; p.sold += +i.sold_qty; p.broken += +i.broken_qty; p.due += +i.amount_due; p.cost += i.sold_qty * i.cost; });
+  return `<h2>Báo cáo kinh doanh</h2><h3>Tháng này</h3><div class="cards">${card("Doanh thu bán lẻ", money(mon.retail)) + card("Điểm bán hưởng", money(mon.share)) + card("TV TƯỢNG phải thu", money(mon.due)) + card("Giá vốn", money(mon.cost)) + card("Lãi gộp", money(mon.due - mon.cost), "green") + card("Đã thu", money(a.paidMonth))}</div>
+  <h3 style="margin-top:16px">Từ trước đến nay</h3><div class="cards">${card("Doanh thu bán lẻ", money(all.retail)) + card("Phải thu", money(all.due)) + card("Lãi gộp", money(all.due - all.cost), "green") + card("Đã thu", money(a.paid)) + card("Công nợ còn", money(a.debtors.reduce((x, s) => x + +s.debt, 0)), "red") + card("Tỷ lệ hỏng", (a.brokenRate*100).toFixed(1) + "%", a.brokenRate > 0.05 ? "red" : "")}</div>
+  <h3 style="margin-top:16px">Theo cửa hàng</h3>${tbl(["Cửa hàng","Đã bán","Doanh thu lẻ","Phải thu","Công nợ"], Object.entries(byStore).sort((x, y) => y[1].due - x[1].due).map(([id, v]) => `<tr><td>${esc(sName(id))}</td><td>${fnum(v.sold)}</td><td>${money(v.retail)}</td><td>${money(v.due)}</td><td>${money(ST(id)?.debt)}</td></tr>`))}
+  <h3 style="margin-top:16px">Theo sản phẩm</h3>${tbl(["Sản phẩm","Đã bán","Hỏng","Phải thu","Lãi gộp"], Object.entries(byProd).sort((x, y) => y[1].sold - x[1].sold).map(([id, v]) => `<tr><td>${esc(pName(id))}</td><td>${fnum(v.sold)}</td><td>${fnum(v.broken)}</td><td>${money(v.due)}</td><td>${money(v.due - v.cost)}</td></tr>`))}`;
+}
+function pageData(){
+  const old = LS.get("tvtuong-v2", null);
+  return `<h2>Dữ liệu</h2><div class="panel"><h3>☁️ Dữ liệu chính: Supabase</h3><div class="mut">Mọi thao tác được lưu trên Supabase, đồng bộ mọi thiết bị đăng nhập cùng tài khoản. Lần tải gần nhất: ${lastLoad ? dt(lastLoad) : "—"}.</div>
+  <div class="toolbar"><button class="primary" onclick="backupAll()">⬇ Xuất backup toàn bộ (JSON)</button><button class="secondary" onclick="loadAll()">⟳ Tải lại dữ liệu</button></div></div>
+  <div class="panel"><h3>🤖 Nhật ký lệnh AI</h3>${tbl(["Thời gian","Lệnh","Loại","Trạng thái"], S.aiLog.map(l => `<tr><td>${dt(l.created_at)}</td><td>${esc((l.command_text || "").slice(0, 80))}</td><td>${esc(ACT_LABEL[l.action_type] || l.action_type || "")}</td><td><span class="badge ${{ executed:"", failed:"e", cancelled:"i", pending:"w", confirmed:"w" }[l.status]}">${{ executed:"Đã thực hiện", failed:"Lỗi", cancelled:"Đã hủy", pending:"Chờ xác nhận", confirmed:"Đang chạy" }[l.status] || l.status}</span></td></tr>`), "Chưa có lệnh AI.")}</div>
+  ${old ? `<div class="panel"><h3>💾 Dữ liệu bản cũ trên máy này</h3><div class="mut">Bản cũ lưu trong trình duyệt (${(old.products||[]).length} SP, ${(old.stores||[]).length} điểm bán, ${(old.moves||[]).length} lượt giao). Không bị xóa. Có thể tải về để đối chiếu.</div><div class="toolbar"><button class="secondary" onclick="dl('tv-tuong-ban-cu.json', localStorage.getItem('tvtuong-v2'))">⬇ Tải dữ liệu bản cũ</button></div></div>` : ""}`;
+}
+function dl(name, text){ const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type:"application/json" })); a.download = name; a.click(); }
+function backupAll(){ dl("tv-tuong-backup-" + new Date().toISOString().slice(0, 10) + ".json", JSON.stringify({ exported_at: new Date().toISOString(), ...S }, null, 2)); }
+function pageConnect(){
+  return `<h2>Kết nối Supabase</h2><div class="panel"><h3>${user ? "✅ Đã đăng nhập" : "🔐 Đăng nhập"}</h3>
+  ${user ? `<div>Tài khoản: <b>${esc(user.email)}</b></div><div class="mut">Máy chủ: ${esc(SB_URL)} • ${S.products.length} sản phẩm, ${S.stores.length} điểm bán</div><div class="toolbar"><button class="secondary" onclick="loadAll()">⟳ Kiểm tra & tải lại</button><button class="danger" onclick="doLogout()">Đăng xuất</button></div>` : `<div class="mut">Dùng tài khoản Supabase Auth của TV TƯỢNG.</div>${loginForm()}`}
+  ${loadErr ? `<div class="note err">⚠️ ${esc(loadErr)}</div>` : ""}</div>
+  <div class="note info">🔒 Website chỉ dùng <b>Publishable key</b> (khóa công khai). Không bao giờ nhập Secret key / service_role vào đây.</div>`;
+}
+function pageAI(){
+  const c = aiCfg();
+  return `<h2>⚙️ Cấu hình Trợ lý AI</h2><div class="panel"><div class="form"><div><label>Nhà cung cấp</label><select id="ai_p">${[["gemini","Gemini (đang dùng)"],["openai","OpenAI"],["grok","Grok (xAI)"]].map(([v,l]) => `<option value="${v}" ${c.provider === v ? "selected" : ""}>${l}</option>`).join("")}</select></div>
+  <div><label>Model (để trống = tự chọn tốt nhất)</label><input id="ai_m" value="${esc(c.model)}" placeholder="Tự động"></div><div><label>URL backend AI</label><input id="ai_e" value="${esc(c.endpoint)}"></div>
+  <button class="primary" onclick="saveAI()">Lưu</button><button class="secondary" onclick="testAI()">Kiểm tra AI</button></div>
+  <div id="ai_st" class="note info">API key được lưu an toàn trong Cloudflare (Secret), không nằm trên website.</div>
+  <div class="toolbar"><button class="secondary" onclick="listModels()">Xem model Gemini khả dụng</button><button class="secondary" onclick="LS.set('tvt-ai-model','');LS.set('tvt-ai-provider','gemini');LS.set('tvt-ai-endpoint','');render()">Khôi phục mặc định</button></div></div>`;
+}
+function saveAI(){ const e = ai_e.value.trim(); if (!/^https:\/\//i.test(e)) return toast("URL backend phải bắt đầu bằng https:// — không dán API key vào đây.", "err"); if (/AIza|sk-|xai-/.test(ai_m.value + e)) return toast("Có vẻ đây là API key. Không dán key vào website!", "err"); LS.set("tvt-ai-provider", ai_p.value); LS.set("tvt-ai-model", ai_m.value.trim()); LS.set("tvt-ai-endpoint", e === AI_DEFAULT ? "" : e); toast("✅ Đã lưu cấu hình AI", "good"); }
+async function testAI(){ const o = $("ai_st"); o.className = "note info"; o.textContent = "⏳ Đang kiểm tra…"; const t0 = Date.now(); try { const j = await callAI({ message:"Chỉ trả lời: Kết nối AI OK", mode:"test" }); o.className = "note good"; o.innerHTML = `✅ AI hoạt động • <b>${esc(j.provider)}</b> • model <b>${esc(j.model)}</b> • ${((Date.now()-t0)/1000).toFixed(1)}s<br>${esc(j.reply || "")}${(j.tried||[]).length ? `<div class="mut">Đã tự bỏ qua: ${esc(j.tried.join("; "))}</div>` : ""}`; } catch (e) { o.className = "note err"; o.textContent = e.message; } }
+async function listModels(){ const o = $("ai_st"); o.textContent = "⏳…"; try { const j = await fetch(aiCfg().endpoint + "/models").then(r => r.json()); o.className = j.ok ? "note info" : "note err"; o.innerHTML = j.ok ? `<b>Thứ tự tự chọn:</b> ${esc((j.auto_order||[]).join(", "))}` : esc(j.error); } catch (e) { o.className = "note err"; o.textContent = "Không kết nối được backend AI."; } }
+
+
+fpick.addEventListener("change", onPick); fcam.addEventListener("change", onPick);
+document.addEventListener("paste", ev => { if (page !== "🤖 Trợ lý AI") return; const fs = [...(ev.clipboardData?.files || [])]; if (fs.length) { ev.preventDefault(); onPick({ target: { files: fs, set value(v) {} } }); } });
+(async function boot(){
+  render();
+  if (!initSB()) { render(); return; }
+  try { const { data } = await sb.auth.getSession(); user = data.session?.user || null; } catch (e) { loadErr = friendlyDbError(e); }
+  if (user) loadAll(); else render();
+  setInterval(() => { if (user && document.visibilityState === "visible" && Date.now() - lastLoad > 5*60000) loadAll(true); }, 60000);
+})();
+</script>
+</body>
+</html>
