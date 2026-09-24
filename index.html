@@ -619,7 +619,7 @@ function pageStock(){
 let cbLines = [{ pid:"", qty:1 }];
 function pageCombo(){
   const combos = S.products.filter(isCombo);
-  return `<h2>Combo sản phẩm</h2><div class="panel"><h3>📦 Đóng combo từ vật tư</h3><div class="form"><div><label>Combo</label><select id="bc_id">${optProducts("", isCombo)}</select></div><div><label>Số combo</label><input id="bc_qty" type="number"></div><button class="primary" onclick="manualAction('build_combo',{combo_id:bc_id.value,qty:+bc_qty.value})">Kiểm tra & đóng</button></div></div>
+  return `<h2>Combo sản phẩm</h2>${oldCombosPanel()}<div class="panel"><h3>📦 Đóng combo từ vật tư</h3><div class="form"><div><label>Combo</label><select id="bc_id">${optProducts("", isCombo)}</select></div><div><label>Số combo</label><input id="bc_qty" type="number"></div><button class="primary" onclick="manualAction('build_combo',{combo_id:bc_id.value,qty:+bc_qty.value})">Kiểm tra & đóng</button></div></div>
   ${tbl(["Mã","Combo","Thành phần","Giá bán","Điểm hưởng","Giá vốn","Tồn","Đóng thêm được"], combos.map(c => `<tr><td>${esc(c.sku)}</td><td><b>${esc(c.name)}</b></td><td>${comboParts(c.id).map(b => `${fnum(b.quantity)}× ${esc(pName(b.component_product_id))}`).join("<br>")}</td><td>${money(c.retail_price)}</td><td>${money(c.store_share)}</td><td>${money(comboParts(c.id).reduce((x, b) => x + (+P(b.component_product_id)?.cost || 0) * b.quantity, 0))}</td><td>${fnum(c.stock)}</td><td>${canBuild(c.id)}</td></tr>`), "Chưa có combo. Tạo combo bên dưới hoặc nói với Trợ lý AI: \"Tạo Combo Kids gồm 1 tượng tiêu chuẩn, 1 bộ màu 6 màu, 1 cọ, 1 khay, 1 túi, giá 30000, điểm bán hưởng 7000\".")}
   <div class="panel"><h3>＋ Tạo combo mới</h3><div class="form"><div><label>Tên combo *</label><input id="cc_name"></div><div><label>Mã</label><input id="cc_sku" placeholder="COMBO-.."></div><div><label>Giá bán lẻ</label><input id="cc_price" type="number"></div><div><label>Điểm bán hưởng</label><input id="cc_share" type="number"></div></div>
   <table style="min-width:0;margin-top:10px"><tr><th>Thành phần</th><th style="width:90px">Định mức</th><th></th></tr>${cbLines.map((l, i) => `<tr><td><select onchange="cbLines[${i}].pid=this.value">${optProducts(l.pid, p => !isCombo(p))}</select></td><td><input type="number" value="${esc(l.qty)}" onchange="cbLines[${i}].qty=this.value"></td><td><button class="danger" style="padding:6px 9px" onclick="cbLines.splice(${i},1);if(!cbLines.length)cbLines.push({pid:'',qty:1});render()">✕</button></td></tr>`).join("")}</table>
@@ -628,11 +628,64 @@ function pageCombo(){
 function pageStores(){
   const a = analytics();
   return `<h2>Điểm bán</h2><div class="panel"><div class="form"><div><label>Tên cửa hàng *</label><input id="ns_name"></div><div><label>Khu vực</label><input id="ns_area"></div><div><label>Điện thoại</label><input id="ns_phone"></div><div><label>Địa chỉ</label><input id="ns_addr"></div><div><label>Người liên hệ</label><input id="ns_contact"></div><button class="primary" onclick="manualAction('create_store',{name:ns_name.value,area:ns_area.value,phone:ns_phone.value,address:ns_addr.value,contact_name:ns_contact.value})">Thêm điểm bán</button></div></div>
-  ${tbl(["Cửa hàng","Khu vực","Liên hệ","Kệ","Hàng đang giữ","Bán 30 ngày","Đối soát gần nhất","Công nợ"], a.storeRows.map(r => { const s = ST(r.id); return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.area || "")}</td><td>${esc([s.contact_name, s.phone].filter(Boolean).join(" • "))}</td><td>${r.racks}</td><td>${heldAt(r.id).map(i => `<span class="pill">${fnum(i.quantity)} ${esc(pName(i.product_id))}</span>`).join("") || 0}</td><td>${fnum(r.sold30)}</td><td>${r.lastRec ? dOnly(r.lastRec) : "—"}</td><td class="${r.debt ? "red" : ""}">${money(r.debt)}</td></tr>`; }), "Chưa có điểm bán. Thêm ở trên hoặc nói với Trợ lý AI.")}`;
+  ${tbl(["Cửa hàng","Khu vực","Liên hệ","Kệ","Hàng đang giữ","Bán 30 ngày","Đối soát gần nhất","Công nợ",""], a.storeRows.map(r => { const s = ST(r.id); return `<tr><td><b>${esc(r.name)}</b></td><td>${esc(r.area || "")}</td><td>${esc([s.contact_name, s.phone].filter(Boolean).join(" • "))}</td><td>${r.racks}</td><td>${heldAt(r.id).map(i => `<span class="pill">${fnum(i.quantity)} ${esc(pName(i.product_id))}</span>`).join("") || 0}</td><td>${fnum(r.sold30)}</td><td>${r.lastRec ? dOnly(r.lastRec) : "—"}</td><td class="${r.debt ? "red" : ""}">${money(r.debt)}</td><td><button class="secondary" style="padding:6px 9px" onclick="editStore('${r.id}')">Sửa</button></td></tr>`; }), "Chưa có điểm bán. Thêm ở trên hoặc nói với Trợ lý AI.")}`;
 }
 function pageRacks(){
   return `<h2>Kệ / tài sản cho mượn</h2><div class="panel"><div class="form"><div><label>Mã kệ *</label><input id="rk_code" placeholder="K001"></div><div><label>Cửa hàng</label><select id="rk_sid">${optStores("")}</select></div><div><label>Giá trị kệ</label><input id="rk_val" type="number" value="600000"></div><div><label>Tiền cọc</label><input id="rk_dep" type="number" value="0"></div><button class="primary" onclick="manualAction('assign_rack',{code:rk_code.value,store_id:rk_sid.value,asset_value:+rk_val.value||0,deposit:+rk_dep.value||0})">Bàn giao kệ</button></div></div>
   ${tbl(["Mã","Điểm đặt","Giá trị","Cọc","Ngày giao","Trạng thái",""], S.racks.map(r => `<tr><td>${esc(r.code)}</td><td>${esc(r.store_id ? sName(r.store_id) : "Kho")}</td><td>${money(r.asset_value)}</td><td>${money(r.deposit)}</td><td>${dOnly(r.assigned_at)}</td><td><span class="badge ${r.status === "assigned" ? "" : "i"}">${{ assigned:"Đang cho mượn", warehouse:"Trong kho", repair:"Sửa chữa", retired:"Thanh lý" }[r.status] || r.status}</span></td><td>${r.status === "assigned" ? `<button class="secondary" style="padding:6px 9px" onclick="returnRack('${r.id}')">Thu hồi</button>` : ""}</td></tr>`))}`;
+}
+async function editStore(id){
+  const s = ST(id); if (!s) return;
+  const v = prompt(`Sửa "${s.name}"\nNhập: Khu vực; Điện thoại; Địa chỉ; Người liên hệ`, [s.area, s.phone, s.address, s.contact_name].map(x => x || "").join("; "));
+  if (v === null) return; const f = v.split(";").map(x => x.trim());
+  const { error } = await sb.from("stores").update({ area: f[0] || null, phone: f[1] || null, address: f[2] || null, contact_name: f[3] || null }).eq("id", id);
+  if (error) return toast("❌ " + esc(friendlyDbError(error)), "err"); toast("✅ Đã cập nhật cửa hàng", "good"); loadAll(true);
+}
+function printDoc(title, s, date, code, head, rows, totalHtml, sign){
+  const w = window.open("", "_blank"); if (!w) return toast("Trình duyệt chặn cửa sổ in. Hãy cho phép cửa sổ bật lên (popup).", "err");
+  const st = s ? `<p><b>Cửa hàng:</b> ${esc(s.name)}${s.area ? " – " + esc(s.area) : ""}${s.phone ? " • ĐT: " + esc(s.phone) : ""}${s.address ? "<br><b>Địa chỉ:</b> " + esc(s.address) : ""}${s.contact_name ? "<br><b>Người liên hệ:</b> " + esc(s.contact_name) : ""}</p>` : "";
+  w.document.write(`<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} ${esc(code)}</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#111;max-width:760px;margin:auto}h1{font-size:20px;text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #999;padding:6px;font-size:13px;text-align:left}.r{text-align:right}.sign{display:flex;justify-content:space-between;margin-top:36px;text-align:center}.sign div{width:45%;min-height:90px}@media print{.noprint{display:none}}</style></head><body><div style="text-align:center"><b>🎨 TV TƯỢNG</b> – Xưởng tượng tô màu</div><h1>${esc(title)}</h1><p style="text-align:center">Số phiếu: <b>${esc(code)}</b> • Ngày: ${esc(dt(date))}</p>${st}<table><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>${rows.join("")}</table>${totalHtml || ""}<div class="sign"><div><b>${sign[0]}</b><br><i>(Ký, ghi rõ họ tên)</i></div><div><b>${sign[1]}</b><br><i>(Ký, ghi rõ họ tên)</i></div></div><p class="noprint" style="text-align:center;margin-top:24px"><button onclick="print()" style="padding:10px 18px;font-size:15px">🖨 In phiếu</button></p></body></html>`);
+  w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 500);
+}
+const pcode = (pre, id) => pre + "-" + String(id || "").slice(0, 6).toUpperCase();
+function printConsign(id){
+  const c = S.consigns.find(x => x.id === id); if (!c) return;
+  const items = c.consignment_items || []; let tq = 0, tv = 0;
+  const rows = items.map((i, k) => { const p = P(i.product_id) || {}; const v = +i.quantity * (+p.retail_price || 0); tq += +i.quantity; tv += v; return `<tr><td>${k + 1}</td><td>${esc(pName(i.product_id))}</td><td>${esc(p.unit || "")}</td><td class="r">${fnum(i.quantity)}</td><td class="r">${money(p.retail_price)}</td><td class="r">${money(v)}</td></tr>`; });
+  printDoc("PHIẾU GIAO HÀNG KÝ GỬI", ST(c.store_id), c.created_at, pcode("GH", c.id), ["STT","Sản phẩm","ĐVT","SL","Giá bán lẻ","Thành tiền (giá lẻ)"], rows, `<p class="r">Tổng số lượng: <b>${fnum(tq)}</b> • Tổng giá trị theo giá bán lẻ: <b>${money(tv)}</b></p>${c.note ? `<p>Ghi chú: ${esc(c.note)}</p>` : ""}`, ["Bên giao (TV TƯỢNG)", "Bên nhận (Cửa hàng)"]);
+}
+function printRecon(id){
+  const r = S.recs.find(x => x.id === id); if (!r) return;
+  const items = r.reconciliation_items || []; let due = 0;
+  const rows = items.map((i, k) => { due += +i.amount_due; return `<tr><td>${k + 1}</td><td>${esc(pName(i.product_id))}</td><td class="r">${fnum(i.sold_qty)}</td><td class="r">${fnum(i.broken_qty)}</td><td class="r">${fnum(i.returned_qty)}</td><td class="r">${money(i.retail_price)}</td><td class="r">${money(i.store_share)}</td><td class="r">${money(i.amount_due)}</td></tr>`; });
+  const s = ST(r.store_id);
+  printDoc("BIÊN BẢN ĐỐI SOÁT BÁN HÀNG", s, r.created_at, pcode("DS", r.id), ["STT","Sản phẩm","Đã bán","Hỏng","Trả về","Giá lẻ","Điểm bán hưởng","TV TƯỢNG phải thu"], rows, `<p class="r">Phải thu kỳ này: <b>${money(due)}</b>${s ? ` • Công nợ hiện tại của cửa hàng: <b>${money(s.debt)}</b>` : ""}</p>${r.note ? `<p>Ghi chú: ${esc(r.note)}</p>` : ""}`, ["Đại diện TV TƯỢNG", "Đại diện Cửa hàng"]);
+}
+function printPay(id){
+  const p = S.pays.find(x => x.id === id); if (!p) return;
+  const s = ST(p.store_id);
+  printDoc("PHIẾU THU TIỀN", s, p.created_at, pcode("PT", p.id), ["Nội dung","Hình thức","Số tiền"], [`<tr><td>Thu tiền hàng ký gửi${p.note ? " – " + esc(p.note) : ""}</td><td>${{ cash:"Tiền mặt", bank_transfer:"Chuyển khoản", other:"Khác" }[p.payment_method] || ""}</td><td class="r"><b>${money(p.amount)}</b></td></tr>`], s ? `<p class="r">Công nợ còn lại hiện tại: <b>${money(s.debt)}</b></p>` : "", ["Người nộp tiền", "Người thu tiền"]);
+}
+function oldCombos(){
+  const old = LS.get("tvtuong-v2", null); if (!old || !Array.isArray(old.combos)) return [];
+  const seedSku = { 1:"TT-MINI-001", 2:"TT-S-002", 3:"TT-L-003", 4:"MAU-06", 5:"MAU-12", 6:"CO-01", 7:"KHAY-01", 8:"TUI-01" };
+  const codeOf = pid => (old.products || []).find(p => p.id == pid)?.code || seedSku[pid];
+  return old.combos.filter(c => c && c.name && !S.products.some(p => norm(p.name) === norm(c.name) || (c.code && p.sku.toUpperCase() === String(c.code).toUpperCase())))
+    .map(c => ({ name: c.name, sku: c.code || "", retail_price: +c.price || 0, store_share: +c.share || 0, components: (c.bom || []).map(b => { const sku = codeOf(b.pid); const p = S.products.find(x => sku && x.sku.toUpperCase() === String(sku).toUpperCase()); return { product_id: p?.id || "", qty: +b.qty || 1, sku }; }) }));
+}
+function oldCombosPanel(){
+  const list = oldCombos(); if (!list.length) return "";
+  return `<div class="panel" style="margin-bottom:12px"><h3>📥 Combo từ bản cũ trên máy này</h3><div class="mut">Bản cũ có ${list.length} combo chưa có trên Supabase. Kiểm tra rồi bấm tạo (có thể sửa giá sau ở tab Sản phẩm):</div><ul>${list.map(c => `<li><b>${esc(c.name)}</b> (${esc(c.sku)}) – giá ${money(c.retail_price)}, điểm hưởng ${money(c.store_share)}: ${c.components.map(x => `${fnum(x.qty)}× ${x.product_id ? esc(pName(x.product_id)) : `<span class="red">${esc(x.sku || "?")} (không có trên Supabase)</span>`}`).join(", ")}</li>`).join("")}</ul><button class="primary" onclick="importOldCombos()">Tạo ${list.length} combo này trên Supabase</button></div>`;
+}
+async function importOldCombos(){
+  const list = oldCombos(); if (!list.length) return;
+  if (!confirm(`Tạo ${list.length} combo từ bản cũ lên Supabase?`)) return;
+  let ok = 0; const errs = [];
+  for (const c of list) {
+    if (!c.components.length || c.components.some(x => !x.product_id)) { errs.push(c.name + ": thiếu thành phần trên Supabase, cần tạo tay"); continue; }
+    try { await rpc("tv_create_combo", { name: c.name, sku: c.sku, retail_price: c.retail_price, store_share: c.store_share, components: c.components.map(x => ({ product_id: x.product_id, qty: x.qty })) }); ok++; } catch (e) { errs.push(c.name + ": " + friendlyDbError(e)); }
+  }
+  toast(`✅ Đã tạo ${ok} combo.` + (errs.length ? "<br>⚠️ " + errs.map(esc).join("<br>") : ""), errs.length ? "err" : "good"); loadAll(true);
 }
 async function returnRack(id){ if (!confirm("Thu hồi kệ này về kho?")) return; try { await rpc("tv_return_rack", { rack_id: id }); toast("✅ Đã thu hồi kệ", "good"); loadAll(true); } catch (e) { toast("❌ " + esc(friendlyDbError(e)), "err"); } }
 let csLines = [{ pid:"", qty:"" }];
@@ -640,7 +693,7 @@ function pageConsign(){
   return `<h2>Giao hàng ký gửi</h2><div class="panel"><div class="form"><div><label>Cửa hàng *</label><select id="cs_sid">${optStores("")}</select></div><div><label>Ghi chú</label><input id="cs_note"></div></div>
   <table style="min-width:0;margin-top:10px"><tr><th>Sản phẩm / Combo</th><th style="width:90px">SL</th><th></th></tr>${csLines.map((l, i) => `<tr><td><select onchange="csLines[${i}].pid=this.value">${optProducts(l.pid)}</select></td><td><input type="number" value="${esc(l.qty)}" onchange="csLines[${i}].qty=this.value"></td><td><button class="danger" style="padding:6px 9px" onclick="csLines.splice(${i},1);if(!csLines.length)csLines.push({pid:'',qty:''});render()">✕</button></td></tr>`).join("")}</table>
   <div class="toolbar"><button class="secondary" onclick="csLines.push({pid:'',qty:''});render()">＋ Thêm dòng</button><button class="primary" onclick="manualAction('consign',{store_id:cs_sid.value,note:cs_note.value,items:csLines.filter(l=>l.pid).map(l=>({product_id:l.pid,qty:+l.qty}))});csLines=[{pid:'',qty:''}]">Giao hàng</button></div><div class="mut">Combo thiếu tồn sẽ được tự đóng thêm từ vật tư (nếu đủ).</div></div>
-  <h3 style="margin-top:16px">Lịch sử giao</h3>${tbl(["Ngày","Cửa hàng","Hàng","Ghi chú"], S.consigns.map(c => `<tr><td>${dt(c.created_at)}</td><td>${esc(sName(c.store_id))}</td><td>${(c.consignment_items||[]).map(i => `${fnum(i.quantity)} × ${esc(pName(i.product_id))}`).join("<br>")}</td><td>${esc(c.note || "")}</td></tr>`))}`;
+  <h3 style="margin-top:16px">Lịch sử giao</h3>${tbl(["Ngày","Cửa hàng","Hàng","Ghi chú",""], S.consigns.map(c => `<tr><td>${dt(c.created_at)}</td><td>${esc(sName(c.store_id))}</td><td>${(c.consignment_items||[]).map(i => `${fnum(i.quantity)} × ${esc(pName(i.product_id))}`).join("<br>")}</td><td>${esc(c.note || "")}</td><td><button class="secondary" style="padding:6px 9px" onclick="printConsign('${c.id}')">🖨 In</button></td></tr>`))}`;
 }
 let recStore = "";
 function pageRecon(){
@@ -648,7 +701,7 @@ function pageRecon(){
   return `<h2>Đối soát bán hàng</h2><div class="panel"><div class="form"><div><label>Cửa hàng</label><select onchange="recStore=this.value;render()">${optStores(recStore)}</select></div></div>
   ${recStore ? (held.length ? `<table style="min-width:0;margin-top:10px"><tr><th>Sản phẩm</th><th>Đang giữ</th><th>Bán</th><th>Hỏng</th><th>Trả về</th></tr>${held.map(i => `<tr><td>${esc(pName(i.product_id))}<div class="mut">${money(P(i.product_id)?.retail_price)} – hưởng ${money(P(i.product_id)?.store_share)}</div></td><td>${fnum(i.quantity)}</td>${["s","b","r"].map(k => `<td style="width:75px"><input type="number" min="0" id="rc_${k}_${i.product_id}" value="0"></td>`).join("")}</tr>`).join("")}</table>
     <div class="toolbar"><input id="rec_note" placeholder="Ghi chú" style="max-width:320px"><button class="primary" onclick="submitRecon()">Xác nhận đối soát</button></div>` : `<div class="mut" style="margin-top:10px">Cửa hàng này chưa giữ hàng ký gửi nào.</div>`) : `<div class="mut" style="margin-top:10px">Chọn cửa hàng để hiện hàng đang giữ.</div>`}</div>
-  <h3 style="margin-top:16px">Lịch sử đối soát</h3>${tbl(["Ngày","Cửa hàng","Chi tiết","Phải thu"], S.recs.map(r => `<tr><td>${dt(r.created_at)}</td><td>${esc(sName(r.store_id))}</td><td>${(r.reconciliation_items||[]).map(i => `${esc(pName(i.product_id))}: bán ${fnum(i.sold_qty)}${+i.broken_qty ? ", hỏng " + fnum(i.broken_qty) : ""}${+i.returned_qty ? ", trả " + fnum(i.returned_qty) : ""}`).join("<br>")}</td><td>${money((r.reconciliation_items||[]).reduce((x, i) => x + +i.amount_due, 0))}</td></tr>`))}`;
+  <h3 style="margin-top:16px">Lịch sử đối soát</h3>${tbl(["Ngày","Cửa hàng","Chi tiết","Phải thu",""], S.recs.map(r => `<tr><td>${dt(r.created_at)}</td><td>${esc(sName(r.store_id))}</td><td>${(r.reconciliation_items||[]).map(i => `${esc(pName(i.product_id))}: bán ${fnum(i.sold_qty)}${+i.broken_qty ? ", hỏng " + fnum(i.broken_qty) : ""}${+i.returned_qty ? ", trả " + fnum(i.returned_qty) : ""}`).join("<br>")}</td><td>${money((r.reconciliation_items||[]).reduce((x, i) => x + +i.amount_due, 0))}</td><td><button class="secondary" style="padding:6px 9px" onclick="printRecon('${r.id}')">🖨 In</button></td></tr>`))}`;
 }
 function submitRecon(){
   const items = heldAt(recStore).map(i => ({ product_id: i.product_id, sold_qty: +$("rc_s_" + i.product_id).value || 0, broken_qty: +$("rc_b_" + i.product_id).value || 0, returned_qty: +$("rc_r_" + i.product_id).value || 0 })).filter(x => x.sold_qty + x.broken_qty + x.returned_qty > 0);
@@ -662,7 +715,7 @@ function pagePay(){
   return `<h2>Thu tiền & công nợ</h2><div class="panel"><div class="form"><div><label>Cửa hàng</label><select id="py_sid">${`<option value="">— Chọn —</option>` + debtors.map(s => `<option value="${s.id}">${esc(s.name)} • nợ ${money(s.debt)}</option>`).join("")}</select></div><div><label>Số tiền thu</label><input id="py_amt" type="number"></div><div><label>Hình thức</label><select id="py_m"><option value="cash">Tiền mặt</option><option value="bank_transfer">Chuyển khoản</option><option value="other">Khác</option></select></div><div><label>Ghi chú</label><input id="py_note"></div>
   <button class="primary" onclick="if(confirm('Ghi nhận thu '+(+py_amt.value||0).toLocaleString('vi-VN')+'đ?'))manualAction('record_payment',{store_id:py_sid.value,amount:+py_amt.value,method:py_m.value,note:py_note.value})">Ghi nhận thu</button></div></div>
   <div class="cards" style="margin-top:12px">${debtors.map(s => card(esc(s.name), money(s.debt), "red")).join("") || card("Công nợ", "0đ", "green")}</div>
-  <h3 style="margin-top:16px">Lịch sử thu</h3>${tbl(["Ngày","Cửa hàng","Số tiền","Hình thức","Ghi chú"], S.pays.map(p => `<tr><td>${dt(p.created_at)}</td><td>${esc(sName(p.store_id))}</td><td class="green">${money(p.amount)}</td><td>${{ cash:"Tiền mặt", bank_transfer:"Chuyển khoản", other:"Khác" }[p.payment_method]}</td><td>${esc(p.note || "")}</td></tr>`))}`;
+  <h3 style="margin-top:16px">Lịch sử thu</h3>${tbl(["Ngày","Cửa hàng","Số tiền","Hình thức","Ghi chú",""], S.pays.map(p => `<tr><td>${dt(p.created_at)}</td><td>${esc(sName(p.store_id))}</td><td class="green">${money(p.amount)}</td><td>${{ cash:"Tiền mặt", bank_transfer:"Chuyển khoản", other:"Khác" }[p.payment_method]}</td><td>${esc(p.note || "")}</td><td><button class="secondary" style="padding:6px 9px" onclick="printPay('${p.id}')">🖨 In</button></td></tr>`))}`;
 }
 function pageReport(){
   const a = analytics(), all = a.all, mon = a.mon;
