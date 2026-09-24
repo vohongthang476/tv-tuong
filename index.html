@@ -13,7 +13,19 @@ header{background:linear-gradient(135deg,#1466df,#20a1ed);color:#fff;padding:12p
 .top{display:flex;align-items:center;gap:10px;justify-content:space-between}
 .brand{font-size:22px;font-weight:800}.sub{font-size:12px;opacity:.9}
 .who{font-size:12px;text-align:right;opacity:.95}.who button{margin-top:4px;padding:5px 9px;font-size:12px;background:#ffffff26;color:#fff}
-nav{background:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line)}
+.layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:16px;align-items:start}
+.side{position:sticky;top:10px;margin-top:14px;background:#fff;border-radius:14px;box-shadow:0 1px 8px #0000000d;padding:8px;max-height:calc(100vh - 20px);overflow:auto}
+.side .grp{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;padding:12px 10px 4px}
+.side .grp.kho{color:#067647}.side .grp.ch{color:#b54708}.side .grp.main{color:#2456a6}.side .grp.sys{color:#667085}
+.nv{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;color:#344054;padding:9px 10px;border-radius:9px;font-weight:600;font-size:14px}
+.nv:hover{background:#f2f4f7}.nv.on{background:var(--b);color:#fff}.nv.kho.on{background:#12a05c}.nv.ch.on{background:#e87f0c}
+.nv .ic{width:22px;text-align:center}
+.crumb{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;margin:0 0 6px}
+.crumb.kho{background:#e9f8ef;color:#067647}.crumb.ch{background:#fff4e5;color:#b54708}.crumb.main{background:var(--soft);color:#2456a6}.crumb.sys{background:#f2f4f7;color:#475467}
+.sec{margin:16px 0 8px;font-size:14px;font-weight:800}.sec.kho{color:#067647}.sec.ch{color:#b54708}
+.menubtn{display:none;background:#ffffff26;color:#fff;font-size:20px;padding:6px 11px}
+.bottombar,.overlay{display:none}
+@media(max-width:900px){.layout{display:block}.side{position:fixed;top:0;left:0;bottom:0;width:272px;max-height:none;margin:0;border-radius:0 14px 14px 0;z-index:60;transform:translateX(-105%);transition:transform .2s}body.menu .side{transform:none}body.menu .overlay{display:block;position:fixed;inset:0;background:#0006;z-index:50}.menubtn{display:inline-block}.bottombar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:5px 4px calc(5px + env(safe-area-inset-bottom))}.bottombar button{flex:1;background:none;color:#475467;font-size:11px;font-weight:700;padding:3px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;border-radius:8px}.bottombar button b{font-size:19px}.bottombar button.on{color:var(--b);background:var(--soft)}.bottombar button.kho.on{color:#067647;background:#e9f8ef}.bottombar button.ch.on{color:#b54708;background:#fff4e5}body{padding-bottom:68px}}
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
 button{border:0;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer;font-size:14px;font-family:inherit}
 button:disabled{opacity:.5;cursor:not-allowed}
@@ -39,7 +51,7 @@ table{width:100%;border-collapse:collapse;min-width:560px}th,td{padding:9px;bord
 .alerts li{margin:5px 0}
 .empty{padding:18px;text-align:center;color:var(--mut)}
 
-.chat{display:flex;flex-direction:column;height:calc(100vh - 150px);height:calc(100dvh - 150px);min-height:420px;background:#fff;border-radius:16px;box-shadow:0 1px 8px #0000000d;overflow:hidden}
+.chat{display:flex;flex-direction:column;height:calc(100vh - 118px);height:calc(100dvh - 118px);min-height:420px;background:#fff;border-radius:16px;box-shadow:0 1px 8px #0000000d;overflow:hidden}
 .chat-head{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line);gap:8px}
 .chat-head b{font-size:15px}.chat-head .mut{font-size:12px}
 .msgs{flex:1;overflow-y:auto;padding:12px;background:#f8fafc}
@@ -71,14 +83,15 @@ table{width:100%;border-collapse:collapse;min-width:560px}th,td{padding:9px;bord
 .login{max-width:420px;margin:30px auto}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .pill{display:inline-block;background:#eef2f6;border-radius:6px;padding:1px 6px;font-size:12px;margin:1px}
-@media(max-width:600px){.brand{font-size:19px}.num{font-size:19px}.page{padding:10px 8px 24px}.chat{height:calc(100dvh - 128px);border-radius:12px}.bub{max-width:94%}.sub{display:none}}
+@media(max-width:600px){.brand{font-size:19px}.num{font-size:19px}.page{padding:10px 8px 24px}.chat{height:calc(100dvh - 150px);border-radius:12px}.bub{max-width:94%}.sub{display:none}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<header><div class="wrap top"><div><div class="brand">🎨 TV TƯỢNG</div><div class="sub">Quản lý Xưởng & Điểm bán • AI hỗ trợ vận hành</div></div><div class="who" id="who"></div></div></header>
-<nav><div class="wrap tabs" id="tabs"></div></nav>
-<main class="wrap page" id="main"></main>
+<header><div class="wrap top"><div class="row" style="flex-wrap:nowrap"><button class="menubtn" onclick="document.body.classList.toggle('menu')" aria-label="Menu">☰</button><div><div class="brand">🎨 TV TƯỢNG</div><div class="sub">Quản lý Xưởng & Điểm bán • AI hỗ trợ vận hành</div></div></div><div class="who" id="who"></div></div></header>
+<div class="wrap layout"><aside class="side" id="side"></aside><main class="page" id="main"></main></div>
+<div class="overlay" onclick="document.body.classList.remove('menu')"></div>
+<nav class="bottombar" id="bottombar"></nav>
 <input type="file" id="fpick" multiple accept="image/*,.pdf,.csv,.txt,.json,.xlsx,.xls,.docx" hidden>
 <input type="file" id="fcam" accept="image/*" capture="environment" hidden>
 <script>
@@ -544,7 +557,17 @@ function manualAction(type, p){
 
 
 let page = LS.get("tvt-page", "🤖 Trợ lý AI"); if (!MENUS.includes(page)) page = "🤖 Trợ lý AI";
-function go(x){ page = x; LS.set("tvt-page", x); render(); window.scrollTo(0, 0); }
+const NAV = [
+  { c:"main", t:"", items:[["🤖 Trợ lý AI","🤖","Trợ lý AI"],["Tổng quan","📊","Tổng quan"]] },
+  { c:"kho", t:"🏭 Xưởng & Kho", items:[["Kho","📦","Tồn kho xưởng"],["Nhập kho","📥","Nhập hàng / Sản xuất"],["Combo","🎁","Đóng combo"],["Sản phẩm","🗂️","Danh mục sản phẩm"]] },
+  { c:"ch", t:"🏪 Cửa hàng ký gửi", items:[["Điểm bán","🏪","Danh sách cửa hàng"],["Ký gửi","🚚","Giao hàng ký gửi"],["Đối soát","🧾","Đối soát bán hàng"],["Thu tiền","💰","Thu tiền & công nợ"],["Kệ","🗄️","Kệ cho mượn"]] },
+  { c:"main", t:"📈 Báo cáo", items:[["Báo cáo","📈","Báo cáo kinh doanh"]] },
+  { c:"sys", t:"⚙️ Hệ thống", items:[["Dữ liệu","💾","Dữ liệu & nhật ký AI"],["Kết nối","🔐","Tài khoản"],["⚙️ AI","⚙️","Cài đặt AI"]] },
+];
+const pageGroup = () => (NAV.find(g => g.items.some(i => i[0] === page)) || {}).c;
+const BOTTOM = [["🤖 Trợ lý AI","🤖","Trợ lý",""],["Tổng quan","📊","Tổng quan",""],["Kho","🏭","Kho xưởng","kho"],["Điểm bán","🏪","Cửa hàng","ch"],["menu","☰","Menu",""]];
+function crumbHTML(){ const g = NAV.find(x => x.items.some(i => i[0] === page)); if (!g || !g.t) return ""; const it = g.items.find(i => i[0] === page); const hint = { kho:" — hàng đang nằm tại xưởng", ch:" — hàng đã giao ra cửa hàng" }[g.c] || ""; return `<div class="crumb ${g.c}">${g.t} › ${it[2]}${hint}</div>`; }
+function go(x){ if (x === "menu") { document.body.classList.add("menu"); return; } document.body.classList.remove("menu"); page = x; LS.set("tvt-page", x); render(); window.scrollTo(0, 0); }
 const card = (a, b, c = "") => `<div class="card"><div class="mut">${a}</div><div class="num ${c}">${b}</div></div>`;
 const tbl = (head, rows, empty = "Chưa có dữ liệu") => `<div class="table"><table><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>${rows.length ? rows.join("") : `<tr><td colspan="${head.length}" class="empty">${empty}</td></tr>`}</table></div>`;
 function needLogin(){ return `<div class="panel login"><h3>🔐 Cần đăng nhập</h3><div class="mut">Dữ liệu TV TƯỢNG được lưu an toàn trên Supabase. Đăng nhập để xem và thao tác.</div>${loginForm()}</div>`; }
@@ -561,7 +584,8 @@ async function doLogin(){
 async function doLogout(){ if (!confirm("Đăng xuất khỏi thiết bị này?")) return; await sb.auth.signOut(); user = null; render(); }
 
 function render(){
-  $("tabs").innerHTML = MENUS.map(x => `<button class="tab ${x === page ? "on" : ""}" onclick="go('${x}')">${x}</button>`).join("");
+  $("side").innerHTML = NAV.map(g => (g.t ? `<div class="grp ${g.c}">${g.t}</div>` : "") + g.items.map(([id, ic, lb]) => `<button class="nv ${g.c} ${id === page ? "on" : ""}" onclick="go('${id}')"><span class="ic">${ic}</span>${lb}</button>`).join("")).join("");
+  $("bottombar").innerHTML = BOTTOM.map(([id, ic, lb, c]) => `<button class="${c} ${id === page || (c && pageGroup() === c) ? "on" : ""}" onclick="go('${id}')"><b>${ic}</b>${lb}</button>`).join("");
   $("who").innerHTML = user ? `${esc(user.email)}<br><button onclick="loadAll()">⟳ Làm mới</button>` : `<button onclick="go('Kết nối')">Đăng nhập</button>`;
   const M = $("main");
   const status = loadErr ? `<div class="note err">⚠️ ${esc(loadErr)} <button class="secondary" style="padding:5px 9px" onclick="loadAll()">Thử lại</button></div>` : loading ? `<div class="note info">⏳ Đang tải dữ liệu từ Supabase…</div>` : "";
@@ -570,12 +594,12 @@ function render(){
   if (page === "⚙️ AI") { M.innerHTML = pageAI(); return; }
   if (!user) { M.innerHTML = status + needLogin(); return; }
   const fn = { "Tổng quan":pageHome, "Sản phẩm":pageProducts, "Nhập kho":pageReceipt, "Kho":pageStock, "Combo":pageCombo, "Điểm bán":pageStores, "Kệ":pageRacks, "Ký gửi":pageConsign, "Đối soát":pageRecon, "Thu tiền":pagePay, "Báo cáo":pageReport, "Dữ liệu":pageData }[page];
-  M.innerHTML = status + (fn ? fn() : "");
+  M.innerHTML = status + crumbHTML() + (fn ? fn() : "");
 }
 
 function pageHome(){
   const a = analytics(), al = alertsList(a);
-  return `<h2>Tổng quan</h2><div class="cards">${card("Điểm bán", S.stores.filter(s => s.active !== false).length) + card("Kệ đang đặt", S.racks.filter(r => r.status === "assigned").length) + card("Mặt hàng", S.products.filter(p => p.active !== false).length) + card("Tồn kho xưởng", fnum(S.products.reduce((x, p) => x + +p.stock, 0))) + card("Hàng tại điểm bán", fnum(S.inv.reduce((x, i) => x + +i.quantity, 0))) + card("Công nợ", money(a.debtors.reduce((x, s) => x + +s.debt, 0)), "red") + card("Doanh thu lẻ tháng này", money(a.mon.retail)) + card("Đã thu tháng này", money(a.paidMonth), "green")}</div>
+  return `<h2>Tổng quan</h2><div class="sec kho">🏭 Tại xưởng</div><div class="cards">${card("Mặt hàng", S.products.filter(p => p.active !== false).length) + card("Tồn kho xưởng", fnum(S.products.reduce((x, p) => x + +p.stock, 0))) + card("Mặt hàng sắp hết", a.low.length, a.low.length ? "red" : "green")}</div><div class="sec ch">🏪 Tại cửa hàng</div><div class="cards">${card("Cửa hàng", S.stores.filter(s => s.active !== false).length) + card("Hàng đang ký gửi", fnum(S.inv.reduce((x, i) => x + +i.quantity, 0))) + card("Kệ đang đặt", S.racks.filter(r => r.status === "assigned").length) + card("Công nợ", money(a.debtors.reduce((x, s) => x + +s.debt, 0)), "red")}</div><div class="sec">💵 Tháng này</div><div class="cards">${card("Doanh thu bán lẻ", money(a.mon.retail)) + card("TV TƯỢNG phải thu", money(a.mon.due)) + card("Đã thu", money(a.paidMonth), "green")}</div>
   <div class="panel"><h3>🔔 Cảnh báo & gợi ý</h3>${al.length ? `<ul class="alerts" style="padding-left:18px;margin:0">${al.map(([k, t]) => `<li><span class="badge ${k}">${{ e:"Gấp", w:"Chú ý", i:"Gợi ý" }[k]}</span> ${t}</li>`).join("")}</ul>` : `<div class="mut">✅ Chưa có cảnh báo.</div>`}
   <div class="toolbar"><button class="primary" onclick="go('🤖 Trợ lý AI');setTimeout(()=>sendText('Phân tích tình hình kinh doanh và đề xuất việc cần làm hôm nay'),50)">🤖 Nhờ AI tư vấn hôm nay</button></div></div>
   <div class="note info"><b>Luồng chuẩn:</b> Nhập/Sản xuất → Kho → Đóng Combo → Giao ký gửi → Đối soát → Thu tiền → Báo cáo.</div>`;
@@ -612,7 +636,7 @@ function pageReceipt(){
 function submitReceipt(){ manualAction("stock_in", { receipt_type: rc_type.value, supplier: rc_sup.value, note: rc_note.value, items: rcLines.filter(l => l.pid || l.qty).map(l => ({ product_id: l.pid, qty: +l.qty, unit_cost: +l.cost || 0, name_on_doc: pName(l.pid) })) }); rcLines = [{ pid:"", qty:"", cost:"" }]; }
 function pageStock(){
   const a = analytics();
-  return `<h2>Tồn kho</h2><div class="cards">${S.products.filter(p => p.active !== false).map(p => `<div class="card"><div class="mut">${esc(p.name)}</div><div class="num ${+p.stock <= +p.min_stock ? "red" : "green"}">${fnum(p.stock)} <span style="font-size:13px">${esc(p.unit)}</span></div><div class="mut">Tối thiểu ${fnum(p.min_stock)} • tại điểm bán ${fnum(heldTotalProduct(p.id))}${a.sold30[p.id] ? " • bán 30n " + fnum(a.sold30[p.id]) : ""}${isCombo(p) ? " • đóng thêm được " + canBuild(p.id) : ""}</div></div>`).join("")}</div>
+  return `<h2>Tồn kho tại xưởng</h2><div class="cards">${S.products.filter(p => p.active !== false).map(p => `<div class="card"><div class="mut">${esc(p.name)}</div><div class="num ${+p.stock <= +p.min_stock ? "red" : "green"}">${fnum(p.stock)} <span style="font-size:13px">${esc(p.unit)}</span></div><div class="mut">Tối thiểu ${fnum(p.min_stock)} • tại điểm bán ${fnum(heldTotalProduct(p.id))}${a.sold30[p.id] ? " • bán 30n " + fnum(a.sold30[p.id]) : ""}${isCombo(p) ? " • đóng thêm được " + canBuild(p.id) : ""}</div></div>`).join("")}</div>
   <div class="note">🔔 Màu đỏ = chạm mức tồn tối thiểu, cần sản xuất hoặc nhập thêm.</div>
   <h3 style="margin-top:16px">Hàng đang ở điểm bán</h3>${tbl(["Cửa hàng","Sản phẩm","SL"], S.inv.filter(i => +i.quantity > 0).map(i => `<tr><td>${esc(sName(i.store_id))}</td><td>${esc(pName(i.product_id))}</td><td>${fnum(i.quantity)}</td></tr>`))}`;
 }
