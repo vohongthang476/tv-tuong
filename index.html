@@ -3,15 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1466df">
+<meta name="theme-color" content="#0b2e63">
 <title>TV TƯỢNG – Quản lý Xưởng & Điểm bán</title>
+<link rel="icon" href="tv-mark.png"><link rel="apple-touch-icon" href="tv-mark.png">
 <style>
-:root{--b:#1670e8;--b2:#20a1ed;--g:#12a05c;--r:#d92d20;--y:#f79009;--bg:#f3f6fb;--card:#fff;--tx:#172033;--mut:#667085;--line:#e4e7ec;--soft:#edf3ff}
+:root{--navy:#0b2e63;--or:#f26a21;--b:#153f8c;--b2:#f26a21;--g:#12a05c;--r:#d92d20;--y:#f79009;--bg:#f7f5f0;--card:#fff;--tx:#172033;--mut:#667085;--line:#e4e7ec;--soft:#edf3ff}
 *{box-sizing:border-box}html,body{margin:0}body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--tx);font-size:15px;-webkit-text-size-adjust:100%}
-header{background:linear-gradient(135deg,#1466df,#20a1ed);color:#fff;padding:12px 0}
+header{background:linear-gradient(120deg,#0b2e63 0%,#143f8a 60%,#1c52a8 100%);color:#fff;padding:10px 0 14px;position:relative}header:after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#ef4444,#f59e0b,#eab308,#22c55e,#3b82f6,#a855f7,#ec4899)}
 .wrap{max-width:1180px;margin:auto;padding:0 12px}
 .top{display:flex;align-items:center;gap:10px;justify-content:space-between}
-.brand{font-size:22px;font-weight:800}.sub{font-size:12px;opacity:.9}
+.brand{font-size:22px;font-weight:900;letter-spacing:.5px}.brand .t2{color:#ffb27a}
+.logo-badge{width:46px;height:46px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px #0003;flex:0 0 46px}.logo-badge img{width:40px;height:40px;object-fit:contain}
+.sbrand{text-align:center;padding:6px 6px 8px;border-bottom:1px dashed var(--line);margin-bottom:4px}.sbrand img{width:128px;max-width:100%}
+.shelfcard{margin:12px 4px 4px;border-radius:12px;overflow:hidden;background:#fff6ee;text-align:center;font-size:12px;font-weight:700;color:#b54708;border:1px solid #fde2cc}.shelfcard img{width:100%;display:block;max-height:230px;object-fit:cover;object-position:top}.shelfcard div{padding:6px}
+.hero{display:flex;gap:16px;align-items:center;background:linear-gradient(135deg,#fff 0%,#fff6ee 55%,#fde7f3 100%);border-radius:18px;padding:16px 18px;box-shadow:0 1px 8px #0000000d;overflow:hidden;margin-bottom:6px;border:1px solid #fde2cc}.hero-t{flex:1;min-width:0}.hero h2{margin:2px 0 4px}.hero p{margin:0;color:var(--mut)}.hero img{width:150px;height:195px;object-fit:cover;object-position:top;border-radius:14px;box-shadow:0 6px 18px #0002;transform:rotate(2deg);flex:0 0 auto}.hero-k{font-weight:900;color:var(--or);font-size:13px;letter-spacing:.5px}
+@media(max-width:600px){.hero{padding:12px}.hero img{width:92px;height:125px}.hero h2{font-size:17px}.logo-badge{width:38px;height:38px;flex-basis:38px}.logo-badge img{width:32px;height:32px}}
+.sub{font-size:12px;opacity:.9}
 .who{font-size:12px;text-align:right;opacity:.95}.who button{margin-top:4px;padding:5px 9px;font-size:12px;background:#ffffff26;color:#fff}
 .layout{display:grid;grid-template-columns:236px minmax(0,1fr);gap:16px;align-items:start}
 .side{position:sticky;top:10px;margin-top:14px;background:#fff;border-radius:14px;box-shadow:0 1px 8px #0000000d;padding:8px;max-height:calc(100vh - 20px);overflow:auto}
@@ -29,7 +36,7 @@ header{background:linear-gradient(135deg,#1466df,#20a1ed);color:#fff;padding:12p
 .tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
 button{border:0;border-radius:10px;padding:10px 13px;font-weight:700;cursor:pointer;font-size:14px;font-family:inherit}
 button:disabled{opacity:.5;cursor:not-allowed}
-.tab{background:var(--soft);color:#2456a6;white-space:nowrap}.tab.on,.primary{background:var(--b);color:#fff}
+.tab{background:var(--soft);color:#2456a6;white-space:nowrap}.tab.on{background:var(--b);color:#fff}.primary{background:linear-gradient(135deg,#f26a21,#ff8a3d);color:#fff;box-shadow:0 2px 6px #f26a2140}
 .secondary{background:#eef2f6;color:#344054}.danger{background:#fee4e2;color:#b42318}.ok{background:var(--g);color:#fff}
 .page{padding:14px 12px 30px}
 h2{margin:4px 0 12px;font-size:20px}h3{margin:0 0 10px;font-size:16px}
@@ -88,7 +95,7 @@ table{width:100%;border-collapse:collapse;min-width:560px}th,td{padding:9px;bord
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<header><div class="wrap top"><div class="row" style="flex-wrap:nowrap"><button class="menubtn" onclick="document.body.classList.toggle('menu')" aria-label="Menu">☰</button><div><div class="brand">🎨 TV TƯỢNG</div><div class="sub">Quản lý Xưởng & Điểm bán • AI hỗ trợ vận hành</div></div></div><div class="who" id="who"></div></div></header>
+<header><div class="wrap top"><div class="row" style="flex-wrap:nowrap"><button class="menubtn" onclick="document.body.classList.toggle('menu')" aria-label="Menu">☰</button><div><div class="row" style="gap:10px;flex-wrap:nowrap"><div class="logo-badge"><img src="tv-mark.png" alt="TVwin"></div><div><div class="brand">TV <span class="t2">TƯỢNG</span></div><div class="sub">Góc sáng tạo cho trẻ em • Quản lý xưởng & điểm bán</div></div></div></div></div><div class="who" id="who"></div></div></header>
 <div class="wrap layout"><aside class="side" id="side"></aside><main class="page" id="main"></main></div>
 <div class="overlay" onclick="document.body.classList.remove('menu')"></div>
 <nav class="bottombar" id="bottombar"></nav>
@@ -264,7 +271,7 @@ const QUICK = ["Tình hình kinh doanh thế nào?","Kiểm tra sản phẩm s�
 
 function chatHTML(){
   return `<div class="chat">
-    <div class="chat-head"><div><b>🤖 Trợ lý AI TV TƯỢNG</b><div class="mut" id="aistat">${esc(aiCfg().provider)} • ${user ? "dữ liệu Supabase" : "chưa đăng nhập"}</div></div>
+    <div class="chat-head"><div class="row" style="gap:8px;flex-wrap:nowrap"><img src="tv-mark.png" alt="" style="width:34px;height:34px;border-radius:10px;background:#fff;border:1px solid var(--line);padding:2px"><div><b>Trợ lý AI TV TƯỢNG</b><div class="mut" id="aistat">${esc(aiCfg().provider)} • ${user ? "dữ liệu Supabase" : "chưa đăng nhập"}</div></div></div>
       <button class="secondary" style="padding:7px 10px;font-size:12px" onclick="clearChat()">🗑 Xóa hội thoại</button></div>
     <div class="msgs" id="msgs"></div>
     <div class="chips">${QUICK.map(t => `<button class="chip" onclick="sendText(${esc(JSON.stringify(t))})">${esc(t)}</button>`).join("")}</div>
@@ -570,7 +577,7 @@ function crumbHTML(){ const g = NAV.find(x => x.items.some(i => i[0] === page));
 function go(x){ if (x === "menu") { document.body.classList.add("menu"); return; } document.body.classList.remove("menu"); page = x; LS.set("tvt-page", x); render(); window.scrollTo(0, 0); }
 const card = (a, b, c = "") => `<div class="card"><div class="mut">${a}</div><div class="num ${c}">${b}</div></div>`;
 const tbl = (head, rows, empty = "Chưa có dữ liệu") => `<div class="table"><table><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>${rows.length ? rows.join("") : `<tr><td colspan="${head.length}" class="empty">${empty}</td></tr>`}</table></div>`;
-function needLogin(){ return `<div class="panel login"><h3>🔐 Cần đăng nhập</h3><div class="mut">Dữ liệu TV TƯỢNG được lưu an toàn trên Supabase. Đăng nhập để xem và thao tác.</div>${loginForm()}</div>`; }
+function needLogin(){ return `<div class="panel login"><img src="tv-logo.png" alt="TVwin" style="width:130px;display:block;margin:0 auto 8px"><h3 style="text-align:center">🔐 Đăng nhập TV TƯỢNG</h3><div class="mut">Dữ liệu TV TƯỢNG được lưu an toàn trên Supabase. Đăng nhập để xem và thao tác.</div>${loginForm()}</div>`; }
 function loginForm(){ return `<div class="form" style="margin-top:10px"><input id="lemail" type="email" autocomplete="username" placeholder="Email"><input id="lpass" type="password" autocomplete="current-password" placeholder="Mật khẩu" onkeydown="if(event.key==='Enter')doLogin()"><button class="primary" onclick="doLogin()">Đăng nhập</button></div><div id="lmsg" class="mut" style="margin-top:8px"></div>`; }
 async function doLogin(){
   if (!initSB()) return toast(esc(loadErr), "err");
@@ -584,7 +591,7 @@ async function doLogin(){
 async function doLogout(){ if (!confirm("Đăng xuất khỏi thiết bị này?")) return; await sb.auth.signOut(); user = null; render(); }
 
 function render(){
-  $("side").innerHTML = NAV.map(g => (g.t ? `<div class="grp ${g.c}">${g.t}</div>` : "") + g.items.map(([id, ic, lb]) => `<button class="nv ${g.c} ${id === page ? "on" : ""}" onclick="go('${id}')"><span class="ic">${ic}</span>${lb}</button>`).join("")).join("");
+  $("side").innerHTML = `<div class="sbrand"><img src="tv-logo.png" alt="TVwin"></div>` + NAV.map(g => (g.t ? `<div class="grp ${g.c}">${g.t}</div>` : "") + g.items.map(([id, ic, lb]) => `<button class="nv ${g.c} ${id === page ? "on" : ""}" onclick="go('${id}')"><span class="ic">${ic}</span>${lb}</button>`).join("")).join("") + `<div class="shelfcard"><img src="tv-shelf.jpg" alt="Kệ TV TƯỢNG" loading="lazy"><div>🎨 Kệ TV TƯỢNG tại cửa hàng</div></div>`;
   $("bottombar").innerHTML = BOTTOM.map(([id, ic, lb, c]) => `<button class="${c} ${id === page || (c && pageGroup() === c) ? "on" : ""}" onclick="go('${id}')"><b>${ic}</b>${lb}</button>`).join("");
   $("who").innerHTML = user ? `${esc(user.email)}<br><button onclick="loadAll()">⟳ Làm mới</button>` : `<button onclick="go('Kết nối')">Đăng nhập</button>`;
   const M = $("main");
@@ -599,7 +606,7 @@ function render(){
 
 function pageHome(){
   const a = analytics(), al = alertsList(a);
-  return `<h2>Tổng quan</h2><div class="sec kho">🏭 Tại xưởng</div><div class="cards">${card("Mặt hàng", S.products.filter(p => p.active !== false).length) + card("Tồn kho xưởng", fnum(S.products.reduce((x, p) => x + +p.stock, 0))) + card("Mặt hàng sắp hết", a.low.length, a.low.length ? "red" : "green")}</div><div class="sec ch">🏪 Tại cửa hàng</div><div class="cards">${card("Cửa hàng", S.stores.filter(s => s.active !== false).length) + card("Hàng đang ký gửi", fnum(S.inv.reduce((x, i) => x + +i.quantity, 0))) + card("Kệ đang đặt", S.racks.filter(r => r.status === "assigned").length) + card("Công nợ", money(a.debtors.reduce((x, s) => x + +s.debt, 0)), "red")}</div><div class="sec">💵 Tháng này</div><div class="cards">${card("Doanh thu bán lẻ", money(a.mon.retail)) + card("TV TƯỢNG phải thu", money(a.mon.due)) + card("Đã thu", money(a.paidMonth), "green")}</div>
+  return `<div class="hero"><div class="hero-t"><div class="hero-k">🎨 TV TƯỢNG • GÓC SÁNG TẠO CHO TRẺ EM</div><h2>Xin chào! Hôm nay ${new Date().toLocaleDateString("vi-VN", { weekday:"long", day:"numeric", month:"numeric" })}</h2><p>${al.length ? "Có <b>" + al.length + "</b> việc cần chú ý bên dưới." : "Mọi thứ đang ổn định."}</p><div class="toolbar"><button class="primary" onclick="go('🤖 Trợ lý AI')">🤖 Hỏi Trợ lý AI</button><button class="secondary" onclick="go('Ký gửi')">🚚 Giao hàng</button><button class="secondary" onclick="go('Đối soát')">🧾 Đối soát</button></div></div><img src="tv-shelf.jpg" alt="Kệ TV TƯỢNG"></div><div class="sec kho">🏭 Tại xưởng</div><div class="cards">${card("Mặt hàng", S.products.filter(p => p.active !== false).length) + card("Tồn kho xưởng", fnum(S.products.reduce((x, p) => x + +p.stock, 0))) + card("Mặt hàng sắp hết", a.low.length, a.low.length ? "red" : "green")}</div><div class="sec ch">🏪 Tại cửa hàng</div><div class="cards">${card("Cửa hàng", S.stores.filter(s => s.active !== false).length) + card("Hàng đang ký gửi", fnum(S.inv.reduce((x, i) => x + +i.quantity, 0))) + card("Kệ đang đặt", S.racks.filter(r => r.status === "assigned").length) + card("Công nợ", money(a.debtors.reduce((x, s) => x + +s.debt, 0)), "red")}</div><div class="sec">💵 Tháng này</div><div class="cards">${card("Doanh thu bán lẻ", money(a.mon.retail)) + card("TV TƯỢNG phải thu", money(a.mon.due)) + card("Đã thu", money(a.paidMonth), "green")}</div>
   <div class="panel"><h3>🔔 Cảnh báo & gợi ý</h3>${al.length ? `<ul class="alerts" style="padding-left:18px;margin:0">${al.map(([k, t]) => `<li><span class="badge ${k}">${{ e:"Gấp", w:"Chú ý", i:"Gợi ý" }[k]}</span> ${t}</li>`).join("")}</ul>` : `<div class="mut">✅ Chưa có cảnh báo.</div>`}
   <div class="toolbar"><button class="primary" onclick="go('🤖 Trợ lý AI');setTimeout(()=>sendText('Phân tích tình hình kinh doanh và đề xuất việc cần làm hôm nay'),50)">🤖 Nhờ AI tư vấn hôm nay</button></div></div>
   <div class="note info"><b>Luồng chuẩn:</b> Nhập/Sản xuất → Kho → Đóng Combo → Giao ký gửi → Đối soát → Thu tiền → Báo cáo.</div>`;
@@ -668,7 +675,7 @@ async function editStore(id){
 function printDoc(title, s, date, code, head, rows, totalHtml, sign){
   const w = window.open("", "_blank"); if (!w) return toast("Trình duyệt chặn cửa sổ in. Hãy cho phép cửa sổ bật lên (popup).", "err");
   const st = s ? `<p><b>Cửa hàng:</b> ${esc(s.name)}${s.area ? " – " + esc(s.area) : ""}${s.phone ? " • ĐT: " + esc(s.phone) : ""}${s.address ? "<br><b>Địa chỉ:</b> " + esc(s.address) : ""}${s.contact_name ? "<br><b>Người liên hệ:</b> " + esc(s.contact_name) : ""}</p>` : "";
-  w.document.write(`<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} ${esc(code)}</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#111;max-width:760px;margin:auto}h1{font-size:20px;text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #999;padding:6px;font-size:13px;text-align:left}.r{text-align:right}.sign{display:flex;justify-content:space-between;margin-top:36px;text-align:center}.sign div{width:45%;min-height:90px}@media print{.noprint{display:none}}</style></head><body><div style="text-align:center"><b>🎨 TV TƯỢNG</b> – Xưởng tượng tô màu</div><h1>${esc(title)}</h1><p style="text-align:center">Số phiếu: <b>${esc(code)}</b> • Ngày: ${esc(dt(date))}</p>${st}<table><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>${rows.join("")}</table>${totalHtml || ""}<div class="sign"><div><b>${sign[0]}</b><br><i>(Ký, ghi rõ họ tên)</i></div><div><b>${sign[1]}</b><br><i>(Ký, ghi rõ họ tên)</i></div></div><p class="noprint" style="text-align:center;margin-top:24px"><button onclick="print()" style="padding:10px 18px;font-size:15px">🖨 In phiếu</button></p></body></html>`);
+  w.document.write(`<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)} ${esc(code)}</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#111;max-width:760px;margin:auto}h1{font-size:20px;text-align:center;margin:6px 0}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #999;padding:6px;font-size:13px;text-align:left}.r{text-align:right}.sign{display:flex;justify-content:space-between;margin-top:36px;text-align:center}.sign div{width:45%;min-height:90px}@media print{.noprint{display:none}}</style></head><body><div style="text-align:center"><img src="${new URL("tv-logo.png", location.href).href}" alt="" style="height:60px"><br><b>TV TƯỢNG</b> – Góc sáng tạo cho trẻ em</div><h1>${esc(title)}</h1><p style="text-align:center">Số phiếu: <b>${esc(code)}</b> • Ngày: ${esc(dt(date))}</p>${st}<table><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr>${rows.join("")}</table>${totalHtml || ""}<div class="sign"><div><b>${sign[0]}</b><br><i>(Ký, ghi rõ họ tên)</i></div><div><b>${sign[1]}</b><br><i>(Ký, ghi rõ họ tên)</i></div></div><p class="noprint" style="text-align:center;margin-top:24px"><button onclick="print()" style="padding:10px 18px;font-size:15px">🖨 In phiếu</button></p></body></html>`);
   w.document.close(); setTimeout(() => { try { w.focus(); w.print(); } catch (e) {} }, 500);
 }
 const pcode = (pre, id) => pre + "-" + String(id || "").slice(0, 6).toUpperCase();
